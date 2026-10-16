@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>طلاقة - تطبيق تعلم الإنجليزية (التحكم الكامل بالدروس والفيديوهات)</title>
+    <title>طلاقة - تطبيق تعلم الإنجليزية (النسخة الكاملة الشاملة)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- خط تجريدي عالي الجودة -->
@@ -29,6 +29,7 @@
             transform: scale(1.08);
         }
 
+        /* توهج حركي للمرحلة النشطة حالياً */
         @keyframes active-node-pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
             50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
@@ -74,13 +75,13 @@
                     🚀
                 </div>
                 <h1 class="text-3xl font-black mb-2 tracking-wide">تطبيق طلاقة</h1>
-                <p class="text-indigo-100 text-sm font-medium">تعلم الإنجليزية مع كامل الصلاحية للتعديل وإدارة الفيديوهات والأسئلة</p>
+                <p class="text-indigo-100 text-sm font-medium">مسار 20 مرحلة تفاعلي بأسلوب Duolingo مع لوحة تحكم كاملة</p>
             </div>
 
             <div class="space-y-4 my-auto">
                 <h2 class="text-center text-lg font-bold text-indigo-100 mb-2">من سيتعلم معنا اليوم؟</h2>
 
-                <button onclick="selectTrack('kids')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white p-5 rounded-2xl flex items-center justify-between border-b-4 border-emerald-700 btn-3d">
+                <button type="button" onclick="selectTrack('kids')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white p-5 rounded-2xl flex items-center justify-between border-b-4 border-emerald-700 btn-3d cursor-pointer">
                     <div class="flex items-center space-x-4 space-x-reverse text-right">
                         <span class="text-4xl bg-white/20 p-2 rounded-xl">🧸</span>
                         <div>
@@ -91,7 +92,7 @@
                     <span class="text-2xl font-bold">←</span>
                 </button>
 
-                <button onclick="selectTrack('adults')" class="w-full bg-white hover:bg-slate-50 text-indigo-900 p-5 rounded-2xl flex items-center justify-between border-b-4 border-slate-300 btn-3d">
+                <button type="button" onclick="selectTrack('adults')" class="w-full bg-white hover:bg-slate-50 text-indigo-900 p-5 rounded-2xl flex items-center justify-between border-b-4 border-slate-300 btn-3d cursor-pointer">
                     <div class="flex items-center space-x-4 space-x-reverse text-right">
                         <span class="text-4xl bg-indigo-100 p-2 rounded-xl">👨‍🎓</span>
                         <div>
@@ -104,8 +105,8 @@
             </div>
 
             <div class="text-center pb-2">
-                <button onclick="openAdmin()" class="text-xs bg-indigo-800/60 hover:bg-indigo-800 text-indigo-200 px-4 py-2 rounded-xl border border-indigo-500/30">
-                    ⚙️ دخول لوحة التحكم (إدارة الفيديوهات والأسئلة)
+                <button type="button" onclick="openAdmin()" class="text-xs bg-indigo-800/60 hover:bg-indigo-800 text-indigo-200 px-4 py-2 rounded-xl border border-indigo-500/30">
+                    ⚙️ دخول لوحة التحكم (إدارة الدروس والفيديوهات)
                 </button>
             </div>
         </div>
@@ -139,12 +140,12 @@
                         <div class="text-xs text-indigo-200 font-bold">خريطة التعلم الشاملة</div>
                         <div class="text-lg font-black">20 مرحلة تفاعلية 👋</div>
                     </div>
-                    <button onclick="openAdmin()" class="bg-indigo-500 hover:bg-indigo-400 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
-                        ⚙️ التحكم بالفيديوهات
+                    <button type="button" onclick="openAdmin()" class="bg-indigo-500 hover:bg-indigo-400 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
+                        ⚙️ إدارة
                     </button>
                 </div>
 
-                <!-- مسار دولينجو الملتوي -->
+                <!-- مسار دولينجو الملتوي المصمم بالأيقونات التعبيرية لكافة الـ 20 مرحلة -->
                 <div id="lessons-path-container" class="flex flex-col items-center space-y-7 my-4 relative">
                     <div class="absolute w-2.5 bg-slate-200 top-6 bottom-6 -z-0 rounded-full"></div>
                 </div>
@@ -162,15 +163,15 @@
             </div>
 
             <nav class="bg-white border-t border-slate-200 flex justify-around py-2.5 px-2 fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40">
-                <button onclick="switchTab('map')" id="nav-btn-map" class="flex flex-col items-center text-indigo-600">
+                <button type="button" onclick="switchTab('map')" id="nav-btn-map" class="flex flex-col items-center text-indigo-600">
                     <span class="text-xl">🗺️</span>
                     <span class="text-[10px] font-bold mt-0.5">الخريطة</span>
                 </button>
-                <button onclick="switchTab('leaderboard')" id="nav-btn-leaderboard" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <button type="button" onclick="switchTab('leaderboard')" id="nav-btn-leaderboard" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
                     <span class="text-xl">🏆</span>
                     <span class="text-[10px] font-bold mt-0.5">المتصدرون</span>
                 </button>
-                <button onclick="openAdmin()" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <button type="button" onclick="openAdmin()" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
                     <span class="text-xl">⚙️</span>
                     <span class="text-[10px] font-bold mt-0.5">التحكم</span>
                 </button>
@@ -178,20 +179,19 @@
         </div>
 
 
-        <!-- 3. لوحة التحكم المتقدمة بإدارة الدروس (Admin Panel with Edit & Delete) -->
+        <!-- 3. لوحة التحكم المتقدمة بإدارة الدروس (Full Admin Panel) -->
         <div id="admin-screen" class="fixed inset-0 bg-white z-50 hidden flex flex-col p-5 overflow-y-auto max-w-md mx-auto">
             <div class="flex items-center justify-between border-b pb-3 mb-4">
                 <h2 class="text-xl font-black text-indigo-900" id="admin-modal-title">⚙️ إدارة وتعديل الفيديوهات والدروس</h2>
-                <button onclick="closeAdmin()" class="text-slate-500 font-bold text-lg bg-slate-100 p-2 rounded-xl">✕ إغلاق</button>
+                <button type="button" onclick="closeAdmin()" class="text-slate-500 font-bold text-lg bg-slate-100 p-2 rounded-xl">✕ إغلاق</button>
             </div>
 
-            <!-- قائمة الدروس الحالية مع خيار التعديل والحذف -->
+            <!-- قائمة الدروس الحالية للتعديل أو الحذف المباشر -->
             <div class="mb-6 bg-slate-50 p-3 rounded-2xl border border-slate-200">
                 <h3 class="font-black text-xs text-slate-700 mb-2">📋 قائمة المراحل الحالية (اضغط للتعديل أو الحذف):</h3>
                 <div id="admin-lessons-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- نموذج إضافة أو تعديل درس -->
             <form id="add-lesson-form" onsubmit="saveLesson(event)" class="space-y-4 pb-12">
                 <input type="hidden" id="editing-lesson-id" value="">
 
@@ -208,10 +208,8 @@
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">رابط فيديو اليوتيوب (Embed URL):</label>
                     <input type="url" id="lesson-video-input" required placeholder="https://www.youtube.com/embed/XXXXXX" class="w-full p-2.5 rounded-xl border text-sm">
-                    <span class="text-[10px] text-slate-400">انسخ رابط المشاركة واضمن كلمة embed</span>
                 </div>
 
-                <!-- أسئلة الكتابة -->
                 <div class="border-t pt-3">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-black text-xs text-indigo-900">✍️ أسئلة الكتابة الإملائية:</h4>
@@ -220,7 +218,6 @@
                     <div id="write-questions-container" class="space-y-2"></div>
                 </div>
 
-                <!-- أسئلة النطق -->
                 <div class="border-t pt-3">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-black text-xs text-amber-900">🎤 أسئلة النطق الصوتي:</h4>
@@ -229,7 +226,6 @@
                     <div id="speak-questions-container" class="space-y-2"></div>
                 </div>
 
-                <!-- الأسئلة المتنوعة -->
                 <div class="border-t pt-3">
                     <div class="flex justify-between items-center mb-2">
                         <h4 class="font-black text-xs text-emerald-900">🌟 أسئلة متنوعة (اختيارات / صح وخطأ):</h4>
@@ -255,7 +251,7 @@
             <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b pb-3">
                     <h3 id="current-lesson-name" class="font-extrabold text-lg text-slate-800">عرض الدرس</h3>
-                    <button onclick="closeLesson()" class="text-slate-400 text-xl font-bold p-1">✕</button>
+                    <button type="button" onclick="closeLesson()" class="text-slate-400 text-xl font-bold p-1">✕</button>
                 </div>
 
                 <div class="bg-black rounded-2xl overflow-hidden aspect-video shadow-md">
@@ -264,7 +260,7 @@
 
                 <div id="interactive-exercises-list" class="space-y-4"></div>
 
-                <button id="finish-lesson-btn" onclick="triggerGiftBoxModal()" class="hidden w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm animate-bounce mt-4">
+                <button type="button" id="finish-lesson-btn" onclick="triggerGiftBoxModal()" class="hidden w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm animate-bounce mt-4">
                     🎁 استلم مكافأة الدرس والنقاط ←
                 </button>
             </div>
@@ -293,7 +289,7 @@
                 
                 <p class="text-[11px] text-slate-300 font-medium mb-6" id="reward-card-desc">تم إضافة النقاط وفتح المرحلة التالية!</p>
                 
-                <button onclick="claimRewardAndNext()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm">
+                <button type="button" onclick="claimRewardAndNext()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm">
                     الانتقال للمرحلة التالية 🚀
                 </button>
             </div>
@@ -301,14 +297,14 @@
 
     </div>
 
-    <!-- JavaScript الأساسي للتطبيق ولوحة التحكم المطوّرة -->
+    <!-- JavaScript بـ 20 مرحلة محددة وإدارة الفيديوهات والمسارات الشاملة -->
     <script>
-        let userXP = parseInt(localStorage.getItem('user_xp_v3')) || 0;
+        let userXP = parseInt(localStorage.getItem('user_xp_full')) || 0;
         let lessonErrors = 0;
         let activeLessonIndex = 0;
         let currentEarnedXP = 5;
 
-        /* الـ 20 درس المحضرة بفيديوهات متنوعة */
+        /* الـ 20 درس المحضرة بدقة مع أيقونات وفيديوهات متنوعة */
         let full20Lessons = [
             {
                 id: 1, name: "التحيات والتعارف", icon: "👋",
@@ -472,10 +468,10 @@
             }
         ];
 
-        let lessons = JSON.parse(localStorage.getItem('app_lessons_v3')) || full20Lessons;
+        let lessons = JSON.parse(localStorage.getItem('app_lessons_full')) || full20Lessons;
         if (lessons.length < 20) {
             lessons = full20Lessons;
-            localStorage.setItem('app_lessons_v3', JSON.stringify(lessons));
+            localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
         }
 
         let leaderboardData = [
@@ -488,7 +484,7 @@
 
         function updateXPDisplay() {
             document.getElementById('user-xp').innerText = userXP;
-            localStorage.setItem('user_xp_v3', userXP);
+            localStorage.setItem('user_xp_full', userXP);
             renderLeaderboard();
         }
 
@@ -536,9 +532,13 @@
             });
         }
 
+        /* اختيار المسار بنجاح وانتقال فوري */
         function selectTrack(track) {
-            document.getElementById('onboarding-screen').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+            const onboarding = document.getElementById('onboarding-screen');
+            const mainApp = document.getElementById('main-app');
+
+            if (onboarding) onboarding.style.display = 'none';
+            if (mainApp) mainApp.classList.remove('hidden');
 
             if(track === 'kids') {
                 document.getElementById('track-title').innerText = "الصغار 🧸";
@@ -563,7 +563,7 @@
                 if (lesson.unlocked) {
                     const isDone = lesson.completed;
                     node.innerHTML = `
-                        <button onclick="openLessonByIndex(${index})" class="w-16 h-16 ${isDone ? 'bg-amber-400 hover:bg-amber-500 border-amber-600 ring-amber-200' : 'bg-emerald-500 hover:bg-emerald-400 border-emerald-700 ring-emerald-200 active-ring'} text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 btn-3d shadow-lg ring-4">
+                        <button type="button" onclick="openLessonByIndex(${index})" class="w-16 h-16 ${isDone ? 'bg-amber-400 hover:bg-amber-500 border-amber-600 ring-amber-200' : 'bg-emerald-500 hover:bg-emerald-400 border-emerald-700 ring-emerald-200 active-ring'} text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 btn-3d shadow-lg ring-4 cursor-pointer">
                             ${lesson.icon || '⭐'}
                         </button>
                         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[10px] font-black px-2 py-0.5 rounded-full shadow border ${isDone ? 'text-amber-800' : 'text-emerald-800'} whitespace-nowrap">
@@ -572,7 +572,7 @@
                     `;
                 } else {
                     node.innerHTML = `
-                        <button onclick="showLockedAlert(${index+1})" class="w-16 h-16 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-300 cursor-not-allowed">
+                        <button type="button" onclick="showLockedAlert(${index+1})" class="w-16 h-16 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-300 cursor-not-allowed">
                             🔒
                         </button>
                         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-400 whitespace-nowrap opacity-80">
@@ -606,7 +606,7 @@
                     card.innerHTML = `
                         <label class="block text-xs font-bold text-slate-700 mb-1">✍️ تمرين كتابة (${i+1}): ${q.prompt}</label>
                         <input type="text" class="w-full p-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 write-input-${i}" placeholder="اكتب الإجابة بالإنجليزية...">
-                        <button onclick="checkWritingItem(${i}, '${q.target}')" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق من الإجابة</button>
+                        <button type="button" onclick="checkWritingItem(${i}, '${q.target}')" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق من الإجابة</button>
                         <div class="text-xs font-bold mt-1 write-res-${i}"></div>
                     `;
                     exercisesList.appendChild(card);
@@ -619,7 +619,7 @@
                     card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200";
                     card.innerHTML = `
                         <label class="block text-xs font-bold text-slate-700 mb-1">🎤 تمرين نطق (${i+1}): ${q.prompt}</label>
-                        <button onclick="startSpeechItem(${i}, '${q.target}')" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
+                        <button type="button" onclick="startSpeechItem(${i}, '${q.target}')" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
                             <span>اضغط وتحدث</span><span>🎙️</span>
                         </button>
                         <div class="text-xs font-bold mt-1 speak-res-${i}"></div>
@@ -635,8 +635,8 @@
                     card.innerHTML = `
                         <label class="block text-xs font-bold text-slate-800">🌟 سؤال (${i+1}): ${q.question}</label>
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="checkChoiceAnswer(this, '${q.optA}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optA}</button>
-                            <button onclick="checkChoiceAnswer(this, '${q.optB}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optB}</button>
+                            <button type="button" onclick="checkChoiceAnswer(this, '${q.optA}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optA}</button>
+                            <button type="button" onclick="checkChoiceAnswer(this, '${q.optB}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optB}</button>
                         </div>
                         <div class="text-xs font-bold mt-1 choice-res"></div>
                     `;
@@ -687,7 +687,7 @@
                 } else {
                     lessonErrors++;
                     res.className = "text-xs font-bold mt-1 text-rose-600";
-                    res.innerText = `❌ إجابة خاطئة! سمعنا (${spokenText}). المطلوب (${target}).`;
+                    res.innerText = `❌ إجابة خاطئة! سمعنا (${spokenText}). المطلوبة (${target}).`;
                 }
             };
             recognition.start();
@@ -755,11 +755,11 @@
 
             if (activeLessonIndex + 1 < lessons.length) {
                 lessons[activeLessonIndex + 1].unlocked = true;
-                localStorage.setItem('app_lessons_v3', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
                 renderLessonsPath();
                 openLessonByIndex(activeLessonIndex + 1);
             } else {
-                localStorage.setItem('app_lessons_v3', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
                 renderLessonsPath();
             }
         }
@@ -769,7 +769,7 @@
             document.getElementById('lesson-iframe').src = '';
         }
 
-        /* ووظائف لوحة التحكم المتقدمة */
+        /* لوحة التحكم الشاملة بالتعديل والحذف */
         function openAdmin() { 
             document.getElementById('admin-screen').classList.remove('hidden'); 
             renderAdminLessonsList();
@@ -789,8 +789,8 @@
                 item.innerHTML = `
                     <div class="font-bold truncate max-w-[180px]">${index+1}. ${l.icon} ${l.name}</div>
                     <div class="flex gap-1">
-                        <button onclick="editLesson(${l.id})" type="button" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg font-bold">✏️ تعديل</button>
-                        <button onclick="deleteLesson(${l.id})" type="button" class="bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold">🗑️ حذف</button>
+                        <button type="button" onclick="editLesson(${l.id})" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg font-bold">✏️ تعديل</button>
+                        <button type="button" onclick="deleteLesson(${l.id})" class="bg-rose-100 text-rose-700 px-2 py-1 rounded-lg font-bold">🗑️ حذف</button>
                     </div>
                 `;
                 container.appendChild(item);
@@ -806,7 +806,6 @@
             document.getElementById('lesson-icon-input').value = lesson.icon || '⭐';
             document.getElementById('lesson-video-input').value = lesson.videoUrl;
 
-            // تفريغ الحقول القديمة وتعبئتها
             document.getElementById('write-questions-container').innerHTML = '';
             document.getElementById('speak-questions-container').innerHTML = '';
             document.getElementById('choice-questions-container').innerHTML = '';
@@ -828,7 +827,7 @@
         function deleteLesson(id) {
             if (confirm("هل أنت تأكد من إزالة هذا الدرس من التطبيق؟")) {
                 lessons = lessons.filter(l => l.id !== id);
-                localStorage.setItem('app_lessons_v3', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
                 renderAdminLessonsList();
                 renderLessonsPath();
             }
@@ -861,9 +860,4 @@
             div.className = "bg-amber-50 p-3 rounded-xl border border-amber-100 space-y-2 relative";
             div.innerHTML = `
                 <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" value="${prompt}" placeholder="السؤال: انطق كلمة (Apple)">
-                <input type="text" class="speak-target w-full p-2 rounded-lg border text-xs" value="${target}" placeholder="الكلمة المطلوب نطقها: apple">
-            `;
-            container.appendChild(div);
-        }
-
-        function addChoiceQuestionField(question = '', optA = '', 
+                <input type="text" class="speak-target w-full
