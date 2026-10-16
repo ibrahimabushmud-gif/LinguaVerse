@@ -14,7 +14,6 @@
             -webkit-tap-highlight-color: transparent;
             user-select: none;
         }
-        /* تأثيرات الأزرار المجسمة الشبيهة بدولينجو */
         .btn-3d {
             box-shadow: 0 5px 0 0 rgba(0, 0, 0, 0.2);
             transition: all 0.1s ease;
@@ -23,18 +22,39 @@
             transform: translateY(4px);
             box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2);
         }
-        /* خريطة التعلم الملتوية */
         .path-node {
             transition: transform 0.2s;
         }
         .path-node:hover {
             transform: scale(1.1);
         }
+
+        /* أنيميشن اهتزاز صندوق الهدايا */
+        @keyframes gift-shake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-8deg) scale(1.05); }
+            40% { transform: rotate(8deg) scale(1.05); }
+            60% { transform: rotate(-5deg) scale(1.05); }
+            80% { transform: rotate(5deg) scale(1.05); }
+        }
+        .gift-bounce {
+            animation: gift-shake 1.2s infinite ease-in-out;
+        }
+
+        /* أنيميشن فتح الصندوق وظهور النقاط */
+        @keyframes pop-up {
+            0% { transform: scale(0.2); opacity: 0; }
+            70% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-pop {
+            animation: pop-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-slate-800 flex justify-center min-h-screen">
 
-    <!-- إطار إلكتروني يمثل هيكل الهاتف على الشاشات الكبيرة -->
+    <!-- إطار إلكتروني يمثل هيكل الهاتف -->
     <div class="w-full max-w-md bg-slate-100 min-h-screen flex flex-col justify-between relative overflow-hidden shadow-2xl">
 
         <!-- 1. شاشة اختيار الفئة عند الدخول (Onboarding Screen) -->
@@ -47,11 +67,9 @@
                 <p class="text-indigo-100 text-sm font-medium">تعلم الإنجليزية بكل متعة وسهولة من الصفر إلى الاحتراف</p>
             </div>
 
-            <!-- خيار الفئات -->
             <div class="space-y-4 my-auto">
                 <h2 class="text-center text-lg font-bold text-indigo-100 mb-2">من سيتعلم معنا اليوم؟</h2>
 
-                <!-- مسار الأطفال -->
                 <button onclick="selectTrack('kids')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white p-5 rounded-2xl flex items-center justify-between border-b-4 border-emerald-700 btn-3d">
                     <div class="flex items-center space-x-4 space-x-reverse text-right">
                         <span class="text-4xl bg-white/20 p-2 rounded-xl">🧸</span>
@@ -63,7 +81,6 @@
                     <span class="text-2xl font-bold">←</span>
                 </button>
 
-                <!-- مسار الكبار -->
                 <button onclick="selectTrack('adults')" class="w-full bg-white hover:bg-slate-50 text-indigo-900 p-5 rounded-2xl flex items-center justify-between border-b-4 border-slate-300 btn-3d">
                     <div class="flex items-center space-x-4 space-x-reverse text-right">
                         <span class="text-4xl bg-indigo-100 p-2 rounded-xl">👨‍🎓</span>
@@ -76,16 +93,17 @@
                 </button>
             </div>
 
-            <div class="text-center text-xs text-indigo-200 pb-2">
-                مناسب لجميع المستويات والأنشطة اليومية
+            <div class="text-center pb-2">
+                <button onclick="openAdmin()" class="text-xs bg-indigo-800/60 hover:bg-indigo-800 text-indigo-200 px-4 py-2 rounded-xl border border-indigo-500/30">
+                    ⚙️ دخول لوحة التحكم (إدارة الدروس)
+                </button>
             </div>
         </div>
 
 
-        <!-- 2. الشاشة الرئيسية للتطبيق (Duolingo Style Map) -->
+        <!-- 2. الشاشة الرئيسية للتطبيق (Main Map View) -->
         <div id="main-app" class="flex-1 flex flex-col hidden pb-20">
             
-            <!-- الشريط العلوي (Top Header) -->
             <header class="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center space-x-2 space-x-reverse">
                     <span class="text-2xl" id="track-icon">👨‍🎓</span>
@@ -96,139 +114,248 @@
                 </div>
 
                 <div class="flex items-center space-x-3 space-x-reverse">
-                    <!-- الشعلة اليومية Streak -->
                     <div class="flex items-center space-x-1 space-x-reverse text-amber-500 font-extrabold text-sm bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-                        <span>🔥</span>
-                        <span>3</span>
+                        <span>🔥</span><span id="user-streak">1</span>
                     </div>
-                    <!-- النقاط XP -->
                     <div class="flex items-center space-x-1 space-x-reverse text-indigo-600 font-extrabold text-sm bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
-                        <span>⚡</span>
-                        <span>120</span>
+                        <span>⚡</span><span id="user-xp">0</span> <span class="text-[10px]">XP</span>
                     </div>
                 </div>
             </header>
 
-            <!-- خريطة الدروس الملتوية (duolingo style path) -->
-            <main class="flex-1 overflow-y-auto px-4 py-6">
-                
-                <!-- عنوان الوحدة -->
+            <div id="tab-map" class="flex-1 overflow-y-auto px-4 py-6">
                 <div class="bg-indigo-600 text-white p-4 rounded-2xl shadow-md mb-8 flex justify-between items-center">
                     <div>
-                        <div class="text-xs text-indigo-200 font-bold">الوحدة 1</div>
-                        <div class="text-lg font-black">أساسيات اللغة والتحية 👋</div>
+                        <div class="text-xs text-indigo-200 font-bold">رحلة التعلم</div>
+                        <div class="text-lg font-black">الدروس والمراحل 👋</div>
                     </div>
-                    <div class="bg-indigo-500 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
-                        0/5 أكملت
-                    </div>
+                    <button onclick="openAdmin()" class="bg-indigo-500 hover:bg-indigo-400 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
+                        ⚙️ إدارة
+                    </button>
                 </div>
 
-                <!-- مسار المراحل والتنقل -->
-                <div class="flex flex-col items-center space-y-6 my-4 relative">
-                    
-                    <!-- خط خلفي للمسار -->
+                <div id="lessons-path-container" class="flex flex-col items-center space-y-6 my-4 relative">
                     <div class="absolute w-2 bg-slate-300 top-6 bottom-6 -z-0 rounded-full"></div>
-
-                    <!-- المرحلة 1 (مفتوحة) -->
-                    <div class="relative z-10 path-node">
-                        <button onclick="openLesson('الدرس 1: التحية والتعارف')" class="w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 border-emerald-700 btn-3d shadow-lg ring-4 ring-emerald-200">
-                            ⭐
-                        </button>
-                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-xs font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
-                            الدرس 1
-                        </div>
-                    </div>
-
-                    <!-- المرحلة 2 (منحرفة لليمين) -->
-                    <div class="relative z-10 path-node translate-x-8">
-                        <button onclick="openLesson('الدرس 2: الأرقام والألوان')" class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
-                            🔒
-                        </button>
-                    </div>
-
-                    <!-- المرحلة 3 (منحرفة لليسار) -->
-                    <div class="relative z-10 path-node -translate-x-8">
-                        <button class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
-                            🔒
-                        </button>
-                    </div>
-
-                    <!-- المرحلة 4 (اختبار الوحدة) -->
-                    <div class="relative z-10 path-node">
-                        <button class="w-20 h-20 bg-amber-400 text-amber-900 rounded-full flex items-center justify-center text-3xl font-black border-b-4 border-amber-600 cursor-not-allowed shadow-md">
-                            🏆
-                        </button>
-                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-xs font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
-                            اختبار الوحدة
-                        </div>
-                    </div>
-
                 </div>
-            </main>
+            </div>
 
-            <!-- الشريط السفلي للتطبيق (Bottom Nav Bar) -->
+            <!-- قسم لوحة المتصدرين -->
+            <div id="tab-leaderboard" class="flex-1 overflow-y-auto px-4 py-6 hidden space-y-4">
+                <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-5 rounded-2xl shadow-lg text-center">
+                    <span class="text-4xl block mb-1">🏆</span>
+                    <h2 class="text-xl font-black">دوري المتصدرين</h2>
+                    <p class="text-xs text-amber-100">تنافس مع المتعلمين الأوائل هذا الأسبوع!</p>
+                </div>
+
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden divide-y" id="leaderboard-list"></div>
+            </div>
+
             <nav class="bg-white border-t border-slate-200 flex justify-around py-2.5 px-2 fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40">
-                <button class="flex flex-col items-center text-indigo-600">
+                <button onclick="switchTab('map')" id="nav-btn-map" class="flex flex-col items-center text-indigo-600">
                     <span class="text-xl">🗺️</span>
                     <span class="text-[10px] font-bold mt-0.5">الخريطة</span>
                 </button>
-                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
-                    <span class="text-xl">📚</span>
-                    <span class="text-[10px] font-bold mt-0.5">الدروس</span>
-                </button>
-                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                <button onclick="switchTab('leaderboard')" id="nav-btn-leaderboard" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
                     <span class="text-xl">🏆</span>
                     <span class="text-[10px] font-bold mt-0.5">المتصدرون</span>
                 </button>
-                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
-                    <span class="text-xl">👤</span>
-                    <span class="text-[10px] font-bold mt-0.5">حسابي</span>
+                <button onclick="openAdmin()" class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                    <span class="text-xl">⚙️</span>
+                    <span class="text-[10px] font-bold mt-0.5">التحكم</span>
                 </button>
             </nav>
         </div>
 
 
-        <!-- 3. نافذة عرض الدرس (Modal Lesson) -->
+        <!-- 3. لوحة التحكم -->
+        <div id="admin-screen" class="fixed inset-0 bg-white z-50 hidden flex flex-col p-5 overflow-y-auto max-w-md mx-auto">
+            <div class="flex items-center justify-between border-b pb-3 mb-4">
+                <h2 class="text-xl font-black text-indigo-900">⚙️ لوحة إضافة وتعديل الدروس</h2>
+                <button onclick="closeAdmin()" class="text-slate-500 font-bold text-lg bg-slate-100 p-2 rounded-xl">✕ إغلاق</button>
+            </div>
+
+            <form id="add-lesson-form" onsubmit="saveLesson(event)" class="space-y-4 pb-12">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الدرس:</label>
+                    <input type="text" id="lesson-name-input" required placeholder="مثال: الدرس 2: الفواكه" class="w-full p-2.5 rounded-xl border text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">رابط فيديو اليوتيوب (Embed URL):</label>
+                    <input type="url" id="lesson-video-input" required placeholder="https://www.youtube.com/embed/XXXXXX" class="w-full p-2.5 rounded-xl border text-sm">
+                </div>
+
+                <div class="bg-indigo-50 p-3.5 rounded-xl border border-indigo-100 space-y-2">
+                    <h4 class="font-bold text-xs text-indigo-900">✍️ تمرين الكتابة:</h4>
+                    <input type="text" id="write-prompt-input" required placeholder="السؤال: اكتب كلمة 'تفاحة'" class="w-full p-2 rounded-lg border text-xs">
+                    <input type="text" id="write-target-input" required placeholder="الإجابة الصحيحة: apple" class="w-full p-2 rounded-lg border text-xs">
+                </div>
+
+                <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-100 space-y-2">
+                    <h4 class="font-bold text-xs text-amber-900">🎤 تمرين النطق:</h4>
+                    <input type="text" id="speak-prompt-input" required placeholder="السؤال: انطق كلمة (Apple)" class="w-full p-2 rounded-lg border text-xs">
+                    <input type="text" id="speak-target-input" required placeholder="الكلمة المطلوبة: apple" class="w-full p-2 rounded-lg border text-xs">
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl shadow-lg btn-3d text-sm mt-4">
+                    💾 حفظ الدرس ونشره
+                </button>
+            </form>
+        </div>
+
+
+        <!-- 4. نافذة عرض الدرس التفاعلي -->
         <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center">
-            <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 animate-slide-up">
-                
-                <!-- رأس الدرس -->
+            <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b pb-3">
-                    <h3 id="current-lesson-name" class="font-extrabold text-lg text-slate-800">الدرس الأول</h3>
+                    <h3 id="current-lesson-name" class="font-extrabold text-lg text-slate-800">عرض الدرس</h3>
                     <button onclick="closeLesson()" class="text-slate-400 text-xl font-bold p-1">✕</button>
                 </div>
 
-                <!-- فيديو الدرس -->
                 <div class="bg-black rounded-2xl overflow-hidden aspect-video shadow-md">
-                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                    <iframe id="lesson-iframe" class="w-full h-full" src="" allowfullscreen></iframe>
                 </div>
 
-                <!-- تمارين الصوت والكتابة -->
                 <div class="space-y-4">
                     <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                        <label class="block text-xs font-bold text-slate-600 mb-1">✍️ اكتب بالإنجليزية: "أهلاً بك"</label>
-                        <input type="text" id="userInput" placeholder="اكتب إجابتك..." class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button onclick="checkWriting()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق</button>
+                        <label id="write-prompt-label" class="block text-xs font-bold text-slate-600 mb-1">✍️ تمرين الكتابة</label>
+                        <input type="text" id="userInput" placeholder="اكتب الإجابة..." class="w-full p-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button onclick="checkWriting()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق من الإجابة</button>
                         <div id="writingResult" class="text-xs font-bold mt-1"></div>
                     </div>
 
                     <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                        <label class="block text-xs font-bold text-slate-600 mb-1">🎤 نطق الكلمة التالية: "Hello"</label>
+                        <label id="speak-prompt-label" class="block text-xs font-bold text-slate-600 mb-1">🎤 تمرين النطق</label>
                         <button onclick="startSpeechTest()" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
-                            <span>اضغط وتحدث</span>
-                            <span>🎙️</span>
+                            <span>اضغط وتحدث</span><span>🎙️</span>
                         </button>
                         <div id="speechResult" class="text-xs font-bold mt-1"></div>
                     </div>
-                </div>
 
+                    <button id="finish-lesson-btn" onclick="triggerGiftBoxModal()" class="hidden w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm animate-bounce mt-4">
+                        🎁 استلم مكافأة الدرس والنقاط ←
+                    </button>
+                </div>
             </div>
+        </div>
+
+
+        <!-- 5. نافذة صندوق الهدايا التفاعلي (Gift Box Modal) -->
+        <div id="gift-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-center items-center p-6 text-center">
+            
+            <h3 id="gift-title" class="text-2xl font-black text-amber-300 mb-2">تهانينا! أكملت الدرس 🥳</h3>
+            <p id="gift-subtitle" class="text-xs text-slate-200 mb-8">اضغط على صندوق الهدايا لفتحه واستلام مكافأتك!</p>
+
+            <!-- عنصر صندوق الهدايا القابل للنقر -->
+            <div id="gift-box" onclick="openGiftBox()" class="cursor-pointer gift-bounce p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 hover:scale-105 transition">
+                <span id="gift-icon" class="text-8xl block select-none">🎁</span>
+            </div>
+
+            <!-- النقاط التي تظهر بعد الفتح -->
+            <div id="reward-display" class="hidden flex-col items-center space-y-2 mt-6 animate-pop">
+                <span class="text-5xl">⚡</span>
+                <span id="earned-xp-text" class="text-4xl font-black text-amber-400">+5 XP</span>
+                <span class="text-xs text-slate-300 font-bold">تم إضافة النقاط إلى حسابك بنجاح!</span>
+                
+                <button onclick="claimRewardAndNext()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 px-8 rounded-xl shadow-xl btn-3d text-sm mt-6">
+                    الانتقال للدرس التالي 🚀
+                </button>
+            </div>
+
         </div>
 
     </div>
 
-    <!-- JavaScript الأساسي للتطبيق -->
+    <!-- JavaScript لتوليد اللوحة وحفظ البيانات وتأثيرات الهدايا -->
     <script>
+        let userXP = parseInt(localStorage.getItem('user_xp')) || 0;
+        let lessonErrors = 0;
+        let activeLessonIndex = 0;
+        let currentEarnedXP = 5;
+
+        let defaultLessons = [
+            {
+                id: 1,
+                name: "الدرس 1: التحية والترحيب",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writePrompt: "اكتب بالإنجليزية كلمة 'مرحباً'",
+                writeTarget: "hello",
+                speakPrompt: "انطق كلمة 'Hello' بصوت واضح",
+                speakTarget: "hello",
+                unlocked: true
+            },
+            {
+                id: 2,
+                name: "الدرس 2: الأرقام والألوان",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writePrompt: "اكتب بالإنجليزية الرقم 'واحد'",
+                writeTarget: "one",
+                speakPrompt: "انطق كلمة 'One' بصوت واضح",
+                speakTarget: "one",
+                unlocked: false
+            }
+        ];
+
+        let lessons = JSON.parse(localStorage.getItem('app_lessons')) || defaultLessons;
+
+        let leaderboardData = [
+            { name: "سارة أحمد 👑", xp: 145, avatar: "👩‍💼" },
+            { name: "محمد علي", xp: 110, avatar: "👨‍💻" },
+            { name: "أنت (المستخدم)", xp: userXP, avatar: "🌟", isUser: true },
+            { name: "عمر خالد", xp: 45, avatar: "🧑‍🎓" },
+            { name: "فاطمة حسن", xp: 20, avatar: "👧" }
+        ];
+
+        function updateXPDisplay() {
+            document.getElementById('user-xp').innerText = userXP;
+            localStorage.setItem('user_xp', userXP);
+            renderLeaderboard();
+        }
+
+        function switchTab(tab) {
+            if (tab === 'map') {
+                document.getElementById('tab-map').classList.remove('hidden');
+                document.getElementById('tab-leaderboard').classList.add('hidden');
+                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-indigo-600";
+                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
+            } else {
+                document.getElementById('tab-map').classList.add('hidden');
+                document.getElementById('tab-leaderboard').classList.remove('hidden');
+                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
+                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-indigo-600";
+            }
+        }
+
+        function renderLeaderboard() {
+            const userIndex = leaderboardData.findIndex(u => u.isUser);
+            if (userIndex !== -1) leaderboardData[userIndex].xp = userXP;
+
+            leaderboardData.sort((a, b) => b.xp - a.xp);
+
+            const list = document.getElementById('leaderboard-list');
+            list.innerHTML = '';
+
+            leaderboardData.forEach((user, index) => {
+                const row = document.createElement('div');
+                row.className = `p-3.5 flex items-center justify-between ${user.isUser ? 'bg-indigo-50 border-r-4 border-indigo-600' : ''}`;
+                
+                let rankBadge = `<span class="font-bold text-slate-400 w-6">${index + 1}</span>`;
+                if(index === 0) rankBadge = `<span class="text-xl w-6">🥇</span>`;
+                if(index === 1) rankBadge = `<span class="text-xl w-6">🥈</span>`;
+                if(index === 2) rankBadge = `<span class="text-xl w-6">🥉</span>`;
+
+                row.innerHTML = `
+                    <div class="flex items-center space-x-3 space-x-reverse">
+                        ${rankBadge}
+                        <span class="text-2xl">${user.avatar}</span>
+                        <div class="font-bold text-sm ${user.isUser ? 'text-indigo-900 font-extrabold' : 'text-slate-700'}">${user.name}</div>
+                    </div>
+                    <div class="font-black text-sm text-indigo-600">${user.xp} XP</div>
+                `;
+                list.appendChild(row);
+            });
+        }
+
         function selectTrack(track) {
             document.getElementById('onboarding-screen').classList.add('hidden');
             document.getElementById('main-app').classList.remove('hidden');
@@ -240,56 +367,187 @@
                 document.getElementById('track-title').innerText = "الكبار 👨‍🎓";
                 document.getElementById('track-icon').innerText = "👨‍🎓";
             }
+            updateXPDisplay();
+            renderLessonsPath();
         }
 
-        function openLesson(name) {
-            document.getElementById('current-lesson-name').innerText = name;
+        function renderLessonsPath() {
+            const container = document.getElementById('lessons-path-container');
+            container.innerHTML = '<div class="absolute w-2 bg-slate-300 top-6 bottom-6 -z-0 rounded-full"></div>';
+
+            lessons.forEach((lesson, index) => {
+                const node = document.createElement('div');
+                const offsetClass = index % 2 === 1 ? 'translate-x-6' : '-translate-x-6';
+                node.className = `relative z-10 path-node ${index === 0 ? '' : offsetClass}`;
+
+                if (lesson.unlocked) {
+                    node.innerHTML = `
+                        <button onclick="openLessonByIndex(${index})" class="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-emerald-700 btn-3d shadow-lg ring-4 ring-emerald-200">
+                            ⭐
+                        </button>
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
+                            ${lesson.name}
+                        </div>
+                    `;
+                } else {
+                    node.innerHTML = `
+                        <button class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
+                            🔒
+                        </button>
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-400 whitespace-nowrap">
+                            مغلق
+                        </div>
+                    `;
+                }
+                container.appendChild(node);
+            });
+        }
+
+        function openLessonByIndex(index) {
+            activeLessonIndex = index;
+            lessonErrors = 0;
+            const lesson = lessons[index];
+
+            document.getElementById('current-lesson-name').innerText = lesson.name;
+            document.getElementById('lesson-iframe').src = lesson.videoUrl;
+            document.getElementById('write-prompt-label').innerText = "✍️ " + lesson.writePrompt;
+            document.getElementById('speak-prompt-label').innerText = "🎤 " + lesson.speakPrompt;
+
+            document.getElementById('userInput').value = '';
+            document.getElementById('writingResult').innerText = '';
+            document.getElementById('speechResult').innerText = '';
+            document.getElementById('finish-lesson-btn').classList.add('hidden');
+
             document.getElementById('lesson-modal').classList.remove('hidden');
-        }
-
-        function closeLesson() {
-            document.getElementById('lesson-modal').classList.add('hidden');
         }
 
         function checkWriting() {
             const val = document.getElementById('userInput').value.trim().toLowerCase();
             const res = document.getElementById('writingResult');
-            if(val.includes("hello") || val.includes("welcome")) {
+            const target = lessons[activeLessonIndex].writeTarget;
+
+            if (val === target) {
                 res.className = "text-xs font-bold mt-1 text-emerald-600";
-                res.innerText = "✨ أحسنت! إجابة صحيحة.";
+                res.innerText = `🎉 ممتاز! إجابة صحيحة.`;
+                checkLessonCompletion();
             } else {
+                lessonErrors++;
                 res.className = "text-xs font-bold mt-1 text-rose-600";
-                res.innerText = "❌ حاول كتابة Hello أو Welcome";
+                res.innerText = `❌ خطأ! الكلمة المطلوبة هي (${target}).`;
             }
         }
 
         function startSpeechTest() {
             const speechResult = document.getElementById('speechResult');
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            
+
             if (!SpeechRecognition) {
                 speechResult.className = "text-xs font-bold mt-1 text-rose-600";
-                speechResult.innerText = "المتصفح لا يدعم الصوت، استخدم Chrome.";
+                speechResult.innerText = "استخدم Google Chrome.";
                 return;
             }
 
             const recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
+            const target = lessons[activeLessonIndex].speakTarget;
+
             speechResult.className = "text-xs font-bold mt-1 text-indigo-600 animate-pulse";
-            speechResult.innerText = "🎙️ جاري الاستماع...";
+            speechResult.innerText = `🎙️ تحدث الآن...`;
 
             recognition.onresult = function(event) {
-                const speechText = event.results[0][0].transcript;
-                speechResult.className = "text-xs font-bold mt-1 text-emerald-600";
-                speechResult.innerText = `✅ ممتاز! سمعت: "${speechText}"`;
+                const spokenText = event.results[0][0].transcript.trim().toLowerCase();
+                if (spokenText.includes(target) || spokenText === target) {
+                    speechResult.className = "text-xs font-bold mt-1 text-emerald-600";
+                    speechResult.innerText = `🎉 نطق صحيح!`;
+                    checkLessonCompletion();
+                } else {
+                    lessonErrors++;
+                    speechResult.className = "text-xs font-bold mt-1 text-rose-600";
+                    speechResult.innerText = `❌ إجابة خاطئة! سمعنا (${spokenText}). المطلوب (${target}).`;
+                }
             };
-
-            recognition.onerror = function() {
-                speechResult.className = "text-xs font-bold mt-1 text-rose-600";
-                speechResult.innerText = "أعد المحاولة مرة أخرى.";
-            };
-
             recognition.start();
+        }
+
+        function checkLessonCompletion() {
+            document.getElementById('finish-lesson-btn').classList.remove('hidden');
+        }
+
+        /* دالة تشغيل نافذة صندوق الهدايا الاحتفالي */
+        function triggerGiftBoxModal() {
+            closeLesson();
+            
+            // احتساب النقاط
+            currentEarnedXP = 5;
+            if (lessonErrors === 1 || lessonErrors === 2) currentEarnedXP = 3;
+            else if (lessonErrors > 2) currentEarnedXP = 1;
+
+            // إعداد الحالة المبدئية للصندوق
+            document.getElementById('gift-icon').innerText = '🎁';
+            document.getElementById('gift-box').className = 'cursor-pointer gift-bounce p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 hover:scale-105 transition';
+            document.getElementById('reward-display').classList.add('hidden');
+            document.getElementById('gift-subtitle').innerText = 'اضغط على صندوق الهدايا لفتحه واستلام مكافأتك!';
+
+            document.getElementById('gift-modal').classList.remove('hidden');
+        }
+
+        /* دالة فتح صندوق الهدايا بالتأثيرات */
+        function openGiftBox() {
+            const giftBox = document.getElementById('gift-box');
+            giftBox.className = 'cursor-default p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 animate-pop';
+            
+            document.getElementById('gift-icon').innerText = '📦✨';
+            document.getElementById('gift-subtitle').innerText = 'تم فتح الصندوق!';
+            
+            document.getElementById('earned-xp-text').innerText = `+${currentEarnedXP} XP`;
+            document.getElementById('reward-display').classList.remove('hidden');
+            document.getElementById('reward-display').classList.add('flex');
+
+            // تحديث الحساب بالنقاط
+            userXP += currentEarnedXP;
+            updateXPDisplay();
+        }
+
+        /* استلام المكافأة والإغلاق للانتقال للدرس التالي */
+        function claimRewardAndNext() {
+            document.getElementById('gift-modal').classList.add('hidden');
+
+            if (activeLessonIndex + 1 < lessons.length) {
+                lessons[activeLessonIndex + 1].unlocked = true;
+                localStorage.setItem('app_lessons', JSON.stringify(lessons));
+                renderLessonsPath();
+                openLessonByIndex(activeLessonIndex + 1);
+            } else {
+                renderLessonsPath();
+            }
+        }
+
+        function closeLesson() {
+            document.getElementById('lesson-modal').classList.add('hidden');
+            document.getElementById('lesson-iframe').src = '';
+        }
+
+        function openAdmin() { document.getElementById('admin-screen').classList.remove('hidden'); }
+        function closeAdmin() { document.getElementById('admin-screen').classList.add('hidden'); }
+
+        function saveLesson(e) {
+            e.preventDefault();
+            const newLesson = {
+                id: Date.now(),
+                name: document.getElementById('lesson-name-input').value,
+                videoUrl: document.getElementById('lesson-video-input').value,
+                writePrompt: document.getElementById('write-prompt-input').value,
+                writeTarget: document.getElementById('write-target-input').value.trim().toLowerCase(),
+                speakPrompt: document.getElementById('speak-prompt-input').value,
+                speakTarget: document.getElementById('speak-target-input').value.trim().toLowerCase(),
+                unlocked: false
+            };
+
+            lessons.push(newLesson);
+            localStorage.setItem('app_lessons', JSON.stringify(lessons));
+            renderLessonsPath();
+            alert("✅ تم إضافة الدرس بنجاح!");
+            closeAdmin();
         }
     </script>
 </body>
