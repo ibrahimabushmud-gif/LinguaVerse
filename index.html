@@ -2,199 +2,291 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة طلاقة - تعلم الإنجليزية بكل سهولة</title>
-    <!-- استيراد الخطوط والتصميم السريع -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>طلاقة - تطبيق تعلم الإنجليزية</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- خط تجريدي عالي الجودة -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #4f46e5;
-            --primary-hover: #4338ca;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-color: #1f2937;
-        }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            font-family: 'Tajawal', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
-        header {
-            background-color: var(--primary);
-            color: white;
-            width: 100%;
-            padding: 1rem;
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: bold;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        /* تأثيرات الأزرار المجسمة الشبيهة بدولينجو */
+        .btn-3d {
+            box-shadow: 0 5px 0 0 rgba(0, 0, 0, 0.2);
+            transition: all 0.1s ease;
         }
-        .container {
-            width: 90%;
-            max-width: 800px;
-            margin: 2rem auto;
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.2);
         }
-        .hidden {
-            display: none !important;
+        /* خريطة التعلم الملتوية */
+        .path-node {
+            transition: transform 0.2s;
         }
-        button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 1rem;
-        }
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* نسبة العرض للإرتفاع 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            background: #000;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-        }
-        .exercise-box {
-            margin-top: 1.5rem;
-            padding: 1rem;
-            background: #f9fafb;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 0.75rem;
-            margin-top: 0.5rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-        .result {
-            margin-top: 1rem;
-            font-weight: bold;
+        .path-node:hover {
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-800 flex justify-center min-h-screen">
 
-    <header>منصة طلاقة التعليمية (LinguaVerse)</header>
+    <!-- إطار إلكتروني يمثل هيكل الهاتف على الشاشات الكبيرة -->
+    <div class="w-full max-w-md bg-slate-100 min-h-screen flex flex-col justify-between relative overflow-hidden shadow-2xl">
 
-    <!-- واجهة اختيار المسار -->
-    <div id="welcome-screen" class="container" style="text-align: center;">
-        <h2>مرحباً بك! اختر مسار التعلم الخاص بك</h2>
-        <p>ابدأ رحلتك من الصفر حتى الاحتراف بطريقة تفاعلية ممتعة.</p>
-        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
-            <button onclick="startApp('kids')" style="background-color: #10b981;">مسار الصغار 🧸</button>
-            <button onclick="startApp('adults')">مسار الكبار 👨‍🎓</button>
+        <!-- 1. شاشة اختيار الفئة عند الدخول (Onboarding Screen) -->
+        <div id="onboarding-screen" class="flex-1 flex flex-col justify-between p-6 bg-indigo-600 text-white z-50">
+            <div class="text-center pt-8">
+                <div class="w-20 h-20 bg-white/10 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 border border-white/20 shadow-inner">
+                    🚀
+                </div>
+                <h1 class="text-3xl font-black mb-2 tracking-wide">تطبيق طلاقة</h1>
+                <p class="text-indigo-100 text-sm font-medium">تعلم الإنجليزية بكل متعة وسهولة من الصفر إلى الاحتراف</p>
+            </div>
+
+            <!-- خيار الفئات -->
+            <div class="space-y-4 my-auto">
+                <h2 class="text-center text-lg font-bold text-indigo-100 mb-2">من سيتعلم معنا اليوم؟</h2>
+
+                <!-- مسار الأطفال -->
+                <button onclick="selectTrack('kids')" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white p-5 rounded-2xl flex items-center justify-between border-b-4 border-emerald-700 btn-3d">
+                    <div class="flex items-center space-x-4 space-x-reverse text-right">
+                        <span class="text-4xl bg-white/20 p-2 rounded-xl">🧸</span>
+                        <div>
+                            <div class="font-extrabold text-xl">مسار الصغار</div>
+                            <div class="text-xs text-emerald-100">ألعاب، ألوان، ومفردات ممتعة</div>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-bold">←</span>
+                </button>
+
+                <!-- مسار الكبار -->
+                <button onclick="selectTrack('adults')" class="w-full bg-white hover:bg-slate-50 text-indigo-900 p-5 rounded-2xl flex items-center justify-between border-b-4 border-slate-300 btn-3d">
+                    <div class="flex items-center space-x-4 space-x-reverse text-right">
+                        <span class="text-4xl bg-indigo-100 p-2 rounded-xl">👨‍🎓</span>
+                        <div>
+                            <div class="font-extrabold text-xl">مسار الكبار</div>
+                            <div class="text-xs text-slate-500">محادثات، قواعد، وتطبيق عملي</div>
+                        </div>
+                    </div>
+                    <span class="text-2xl font-bold text-indigo-600">←</span>
+                </button>
+            </div>
+
+            <div class="text-center text-xs text-indigo-200 pb-2">
+                مناسب لجميع المستويات والأنشطة اليومية
+            </div>
         </div>
+
+
+        <!-- 2. الشاشة الرئيسية للتطبيق (Duolingo Style Map) -->
+        <div id="main-app" class="flex-1 flex flex-col hidden pb-20">
+            
+            <!-- الشريط العلوي (Top Header) -->
+            <header class="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
+                <div class="flex items-center space-x-2 space-x-reverse">
+                    <span class="text-2xl" id="track-icon">👨‍🎓</span>
+                    <div>
+                        <div class="text-xs font-bold text-slate-400">المسار الحالي</div>
+                        <div class="text-sm font-extrabold text-slate-800" id="track-title">الكبار</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <!-- الشعلة اليومية Streak -->
+                    <div class="flex items-center space-x-1 space-x-reverse text-amber-500 font-extrabold text-sm bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+                        <span>🔥</span>
+                        <span>3</span>
+                    </div>
+                    <!-- النقاط XP -->
+                    <div class="flex items-center space-x-1 space-x-reverse text-indigo-600 font-extrabold text-sm bg-indigo-50 px-2.5 py-1 rounded-full border border-indigo-200">
+                        <span>⚡</span>
+                        <span>120</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- خريطة الدروس الملتوية (duolingo style path) -->
+            <main class="flex-1 overflow-y-auto px-4 py-6">
+                
+                <!-- عنوان الوحدة -->
+                <div class="bg-indigo-600 text-white p-4 rounded-2xl shadow-md mb-8 flex justify-between items-center">
+                    <div>
+                        <div class="text-xs text-indigo-200 font-bold">الوحدة 1</div>
+                        <div class="text-lg font-black">أساسيات اللغة والتحية 👋</div>
+                    </div>
+                    <div class="bg-indigo-500 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
+                        0/5 أكملت
+                    </div>
+                </div>
+
+                <!-- مسار المراحل والتنقل -->
+                <div class="flex flex-col items-center space-y-6 my-4 relative">
+                    
+                    <!-- خط خلفي للمسار -->
+                    <div class="absolute w-2 bg-slate-300 top-6 bottom-6 -z-0 rounded-full"></div>
+
+                    <!-- المرحلة 1 (مفتوحة) -->
+                    <div class="relative z-10 path-node">
+                        <button onclick="openLesson('الدرس 1: التحية والتعارف')" class="w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 border-emerald-700 btn-3d shadow-lg ring-4 ring-emerald-200">
+                            ⭐
+                        </button>
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-xs font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
+                            الدرس 1
+                        </div>
+                    </div>
+
+                    <!-- المرحلة 2 (منحرفة لليمين) -->
+                    <div class="relative z-10 path-node translate-x-8">
+                        <button onclick="openLesson('الدرس 2: الأرقام والألوان')" class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
+                            🔒
+                        </button>
+                    </div>
+
+                    <!-- المرحلة 3 (منحرفة لليسار) -->
+                    <div class="relative z-10 path-node -translate-x-8">
+                        <button class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
+                            🔒
+                        </button>
+                    </div>
+
+                    <!-- المرحلة 4 (اختبار الوحدة) -->
+                    <div class="relative z-10 path-node">
+                        <button class="w-20 h-20 bg-amber-400 text-amber-900 rounded-full flex items-center justify-center text-3xl font-black border-b-4 border-amber-600 cursor-not-allowed shadow-md">
+                            🏆
+                        </button>
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-xs font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
+                            اختبار الوحدة
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <!-- الشريط السفلي للتطبيق (Bottom Nav Bar) -->
+            <nav class="bg-white border-t border-slate-200 flex justify-around py-2.5 px-2 fixed bottom-0 left-0 right-0 max-w-md mx-auto z-40">
+                <button class="flex flex-col items-center text-indigo-600">
+                    <span class="text-xl">🗺️</span>
+                    <span class="text-[10px] font-bold mt-0.5">الخريطة</span>
+                </button>
+                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                    <span class="text-xl">📚</span>
+                    <span class="text-[10px] font-bold mt-0.5">الدروس</span>
+                </button>
+                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                    <span class="text-xl">🏆</span>
+                    <span class="text-[10px] font-bold mt-0.5">المتصدرون</span>
+                </button>
+                <button class="flex flex-col items-center text-slate-400 hover:text-slate-600">
+                    <span class="text-xl">👤</span>
+                    <span class="text-[10px] font-bold mt-0.5">حسابي</span>
+                </button>
+            </nav>
+        </div>
+
+
+        <!-- 3. نافذة عرض الدرس (Modal Lesson) -->
+        <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center">
+            <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 animate-slide-up">
+                
+                <!-- رأس الدرس -->
+                <div class="flex items-center justify-between border-b pb-3">
+                    <h3 id="current-lesson-name" class="font-extrabold text-lg text-slate-800">الدرس الأول</h3>
+                    <button onclick="closeLesson()" class="text-slate-400 text-xl font-bold p-1">✕</button>
+                </div>
+
+                <!-- فيديو الدرس -->
+                <div class="bg-black rounded-2xl overflow-hidden aspect-video shadow-md">
+                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+                </div>
+
+                <!-- تمارين الصوت والكتابة -->
+                <div class="space-y-4">
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">✍️ اكتب بالإنجليزية: "أهلاً بك"</label>
+                        <input type="text" id="userInput" placeholder="اكتب إجابتك..." class="w-full p-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button onclick="checkWriting()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق</button>
+                        <div id="writingResult" class="text-xs font-bold mt-1"></div>
+                    </div>
+
+                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                        <label class="block text-xs font-bold text-slate-600 mb-1">🎤 نطق الكلمة التالية: "Hello"</label>
+                        <button onclick="startSpeechTest()" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
+                            <span>اضغط وتحدث</span>
+                            <span>🎙️</span>
+                        </button>
+                        <div id="speechResult" class="text-xs font-bold mt-1"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
-    <!-- واجهة الدرس التفاعلي -->
-    <div id="lesson-screen" class="container hidden">
-        <h3 id="lesson-title">الدرس الأول: التحية والتعارف (Greetings)</h3>
-        
-        <!-- مشغل الفيديو -->
-        <div class="video-container">
-            <!-- استبدل الرابط أدناه بأي فيديو يوتيوب تعليمي -->
-            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
-        </div>
-
-        <!-- التمارين التفاعلية -->
-        <div class="exercise-box">
-            <h4>1. تمرين الكتابة الإملائية:</h4>
-            <p>اكتب باللغة الإنجليزية: "أهلاً بك، كيف حالك؟"</p>
-            <input type="text" id="userInput" placeholder="اكتب إجابتك هنا...">
-            <button onclick="checkWriting()">تحقق من الإجابة</button>
-            <div id="writingResult" class="result"></div>
-        </div>
-
-        <div class="exercise-box">
-            <h4>2. تمرين النطق الصوتي (AI Speech):</h4>
-            <p>انقر على الزر واقرأ هذه الكلمة بصوت واضح: <strong>"Hello World"</strong></p>
-            <button onclick="startSpeechTest()" style="background-color: #f59e0b;">اضغط وابدأ التحدث 🎤</button>
-            <div id="speechResult" class="result"></div>
-        </div>
-
-        <button onclick="goBack()" style="background-color: #6b7280; margin-top: 2rem;">العودة للخلف</button>
-    </div>
-
+    <!-- JavaScript الأساسي للتطبيق -->
     <script>
-        function startApp(track) {
-            document.getElementById('welcome-screen').classList.add('hidden');
-            document.getElementById('lesson-screen').classList.remove('hidden');
+        function selectTrack(track) {
+            document.getElementById('onboarding-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+
             if(track === 'kids') {
-                document.getElementById('lesson-title').innerText = "🧸 مسار الصغار: تعلم الكلمات بالصور والألوان";
+                document.getElementById('track-title').innerText = "الصغار 🧸";
+                document.getElementById('track-icon').innerText = "🧸";
             } else {
-                document.getElementById('lesson-title').innerText = "👨‍🎓 مسار الكبار: المحادثة والقواعد المتقدمة";
+                document.getElementById('track-title').innerText = "الكبار 👨‍🎓";
+                document.getElementById('track-icon').innerText = "👨‍🎓";
             }
         }
 
-        function goBack() {
-            document.getElementById('lesson-screen').classList.add('hidden');
-            document.getElementById('welcome-screen').classList.remove('hidden');
+        function openLesson(name) {
+            document.getElementById('current-lesson-name').innerText = name;
+            document.getElementById('lesson-modal').classList.remove('hidden');
+        }
+
+        function closeLesson() {
+            document.getElementById('lesson-modal').classList.add('hidden');
         }
 
         function checkWriting() {
             const val = document.getElementById('userInput').value.trim().toLowerCase();
             const res = document.getElementById('writingResult');
-            if(val.includes("hello") || val.includes("how are you")) {
-                res.style.color = "green";
-                res.innerText = "إجابة صحيحة! أحسنت 🌟";
+            if(val.includes("hello") || val.includes("welcome")) {
+                res.className = "text-xs font-bold mt-1 text-emerald-600";
+                res.innerText = "✨ أحسنت! إجابة صحيحة.";
             } else {
-                res.style.color = "red";
-                res.innerText = "حاول مرة أخرى، الإجابة تتضمن Hello أو How are you.";
+                res.className = "text-xs font-bold mt-1 text-rose-600";
+                res.innerText = "❌ حاول كتابة Hello أو Welcome";
             }
         }
 
-        // تمرين النطق باستخدام المتصفح الداخلي
         function startSpeechTest() {
             const speechResult = document.getElementById('speechResult');
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             
             if (!SpeechRecognition) {
-                speechResult.style.color = "red";
-                speechResult.innerText = "متصفحك لا يدعم خاصية التعرف على الصوت، جرب متصفح Google Chrome.";
+                speechResult.className = "text-xs font-bold mt-1 text-rose-600";
+                speechResult.innerText = "المتصفح لا يدعم الصوت، استخدم Chrome.";
                 return;
             }
 
             const recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
-            speechResult.style.color = "blue";
-            speechResult.innerText = "جاري الاستماع... تحدث الآن 🎙️";
+            speechResult.className = "text-xs font-bold mt-1 text-indigo-600 animate-pulse";
+            speechResult.innerText = "🎙️ جاري الاستماع...";
 
             recognition.onresult = function(event) {
                 const speechText = event.results[0][0].transcript;
-                speechResult.style.color = "green";
-                speechResult.innerText = `قلتَ: "${speechText}" - ممتاز جداً!`;
+                speechResult.className = "text-xs font-bold mt-1 text-emerald-600";
+                speechResult.innerText = `✅ ممتاز! سمعت: "${speechText}"`;
             };
 
             recognition.onerror = function() {
-                speechResult.style.color = "red";
-                speechResult.innerText = "حدث خطأ في التقاط الصوت، حاول مجدداً.";
+                speechResult.className = "text-xs font-bold mt-1 text-rose-600";
+                speechResult.innerText = "أعد المحاولة مرة أخرى.";
             };
 
             recognition.start();
