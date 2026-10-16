@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>طلاقة - تطبيق تعلم الإنجليزية</title>
+    <title>طلاقة - تطبيق تعلم الإنجليزية (مسار Duolingo التفاعلي)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- خط تجريدي عالي الجودة -->
@@ -16,7 +16,7 @@
         }
         .btn-3d {
             box-shadow: 0 5px 0 0 rgba(0, 0, 0, 0.2);
-            transition: all 0.1s ease;
+            transition: all 0.15s ease;
         }
         .btn-3d:active {
             transform: translateY(4px);
@@ -26,10 +26,18 @@
             transition: transform 0.2s;
         }
         .path-node:hover {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
-        /* أنيميشن اهتزاز صندوق الهدايا */
+        /* توهج حركة المرحلة النشطة حالياً */
+        @keyframes active-node-pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
+            50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
+        }
+        .active-ring {
+            animation: active-node-pulse 2s infinite;
+        }
+
         @keyframes gift-shake {
             0%, 100% { transform: rotate(0deg) scale(1); }
             20% { transform: rotate(-8deg) scale(1.05); }
@@ -41,14 +49,17 @@
             animation: gift-shake 1.2s infinite ease-in-out;
         }
 
-        /* أنيميشن فتح الصندوق وظهور النقاط */
         @keyframes pop-up {
-            0% { transform: scale(0.2); opacity: 0; }
-            70% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
+            0% { transform: scale(0.3) translateY(30px); opacity: 0; }
+            70% { transform: scale(1.05) translateY(-5px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
         }
         .animate-pop {
             animation: pop-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .reward-glow {
+            box-shadow: 0 0 50px rgba(245, 158, 11, 0.35);
         }
     </style>
 </head>
@@ -64,7 +75,7 @@
                     🚀
                 </div>
                 <h1 class="text-3xl font-black mb-2 tracking-wide">تطبيق طلاقة</h1>
-                <p class="text-indigo-100 text-sm font-medium">تعلم الإنجليزية بكل متعة وسهولة من الصفر إلى الاحتراف</p>
+                <p class="text-indigo-100 text-sm font-medium">مسار 20 مرحلة تفاعلي بأسلوب Duolingo من الصفر للتعلم</p>
             </div>
 
             <div class="space-y-4 my-auto">
@@ -86,7 +97,7 @@
                         <span class="text-4xl bg-indigo-100 p-2 rounded-xl">👨‍🎓</span>
                         <div>
                             <div class="font-extrabold text-xl">مسار الكبار</div>
-                            <div class="text-xs text-slate-500">محادثات، قواعد، وتطبيق عملي</div>
+                            <div class="text-xs text-slate-500">20 مرحلة متدرجة للأبجدية والقواعد</div>
                         </div>
                     </div>
                     <span class="text-2xl font-bold text-indigo-600">←</span>
@@ -101,7 +112,7 @@
         </div>
 
 
-        <!-- 2. الشاشة الرئيسية للتطبيق (Main Map View) -->
+        <!-- 2. الشاشة الرئيسية للتطبيق (Duolingo Interactive Path View) -->
         <div id="main-app" class="flex-1 flex flex-col hidden pb-20">
             
             <header class="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
@@ -126,16 +137,17 @@
             <div id="tab-map" class="flex-1 overflow-y-auto px-4 py-6">
                 <div class="bg-indigo-600 text-white p-4 rounded-2xl shadow-md mb-8 flex justify-between items-center">
                     <div>
-                        <div class="text-xs text-indigo-200 font-bold">رحلة التعلم</div>
-                        <div class="text-lg font-black">الدروس والمراحل 👋</div>
+                        <div class="text-xs text-indigo-200 font-bold">خريطة التعلم الشاملة</div>
+                        <div class="text-lg font-black">20 مرحلة تفاعلية 👋</div>
                     </div>
                     <button onclick="openAdmin()" class="bg-indigo-500 hover:bg-indigo-400 text-xs px-3 py-1.5 rounded-xl font-bold border border-indigo-400">
                         ⚙️ إدارة
                     </button>
                 </div>
 
-                <div id="lessons-path-container" class="flex flex-col items-center space-y-6 my-4 relative">
-                    <div class="absolute w-2 bg-slate-300 top-6 bottom-6 -z-0 rounded-full"></div>
+                <!-- مسار دولينجو الملتوي المصمم بالأيقونات التعبيرية -->
+                <div id="lessons-path-container" class="flex flex-col items-center space-y-7 my-4 relative">
+                    <div class="absolute w-2.5 bg-slate-200 top-6 bottom-6 -z-0 rounded-full"></div>
                 </div>
             </div>
 
@@ -167,17 +179,22 @@
         </div>
 
 
-        <!-- 3. لوحة التحكم -->
+        <!-- 3. لوحة التحكم (Admin Dashboard) -->
         <div id="admin-screen" class="fixed inset-0 bg-white z-50 hidden flex flex-col p-5 overflow-y-auto max-w-md mx-auto">
             <div class="flex items-center justify-between border-b pb-3 mb-4">
-                <h2 class="text-xl font-black text-indigo-900">⚙️ لوحة إضافة وتعديل الدروس</h2>
+                <h2 class="text-xl font-black text-indigo-900">⚙️ إعداد درس جديد</h2>
                 <button onclick="closeAdmin()" class="text-slate-500 font-bold text-lg bg-slate-100 p-2 rounded-xl">✕ إغلاق</button>
             </div>
 
             <form id="add-lesson-form" onsubmit="saveLesson(event)" class="space-y-4 pb-12">
                 <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الدرس:</label>
-                    <input type="text" id="lesson-name-input" required placeholder="مثال: الدرس 2: الفواكه" class="w-full p-2.5 rounded-xl border text-sm">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم الدرس/الكورس:</label>
+                    <input type="text" id="lesson-name-input" required placeholder="مثال: الدرس 21: القواعد المتقدمة" class="w-full p-2.5 rounded-xl border text-sm">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الأيقونة التعبيرية للمرحلة:</label>
+                    <input type="text" id="lesson-icon-input" required placeholder="ضع إيموجي مميز مثل: 🎓 أو 🚀" class="w-full p-2.5 rounded-xl border text-sm">
                 </div>
 
                 <div>
@@ -185,26 +202,38 @@
                     <input type="url" id="lesson-video-input" required placeholder="https://www.youtube.com/embed/XXXXXX" class="w-full p-2.5 rounded-xl border text-sm">
                 </div>
 
-                <div class="bg-indigo-50 p-3.5 rounded-xl border border-indigo-100 space-y-2">
-                    <h4 class="font-bold text-xs text-indigo-900">✍️ تمرين الكتابة:</h4>
-                    <input type="text" id="write-prompt-input" required placeholder="السؤال: اكتب كلمة 'تفاحة'" class="w-full p-2 rounded-lg border text-xs">
-                    <input type="text" id="write-target-input" required placeholder="الإجابة الصحيحة: apple" class="w-full p-2 rounded-lg border text-xs">
+                <div class="border-t pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-black text-xs text-indigo-900">✍️ أسئلة الكتابة الإملائية:</h4>
+                        <button type="button" onclick="addWriteQuestionField()" class="text-[11px] bg-indigo-100 text-indigo-700 font-bold px-2.5 py-1 rounded-lg">+ إضافة سؤال كتابة</button>
+                    </div>
+                    <div id="write-questions-container" class="space-y-2"></div>
                 </div>
 
-                <div class="bg-amber-50 p-3.5 rounded-xl border border-amber-100 space-y-2">
-                    <h4 class="font-bold text-xs text-amber-900">🎤 تمرين النطق:</h4>
-                    <input type="text" id="speak-prompt-input" required placeholder="السؤال: انطق كلمة (Apple)" class="w-full p-2 rounded-lg border text-xs">
-                    <input type="text" id="speak-target-input" required placeholder="الكلمة المطلوبة: apple" class="w-full p-2 rounded-lg border text-xs">
+                <div class="border-t pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-black text-xs text-amber-900">🎤 أسئلة النطق الصوتي:</h4>
+                        <button type="button" onclick="addSpeakQuestionField()" class="text-[11px] bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-lg">+ إضافة سؤال نطق</button>
+                    </div>
+                    <div id="speak-questions-container" class="space-y-2"></div>
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl shadow-lg btn-3d text-sm mt-4">
-                    💾 حفظ الدرس ونشره
+                <div class="border-t pt-3">
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="font-black text-xs text-emerald-900">🌟 أسئلة متنوعة (اختيارات / صح وخطأ):</h4>
+                        <button type="button" onclick="addChoiceQuestionField()" class="text-[11px] bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-lg">+ إضافة سؤال تميز</button>
+                    </div>
+                    <div id="choice-questions-container" class="space-y-2"></div>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3 rounded-xl shadow-lg btn-3d text-sm mt-6">
+                    💾 حفظ الدرس ونشره على التطبيق
                 </button>
             </form>
         </div>
 
 
-        <!-- 4. نافذة عرض الدرس التفاعلي -->
+        <!-- 4. نافذة عرض الدرس التفاعلي للمستخدم (Modal Lesson) -->
         <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center">
             <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b pb-3">
@@ -216,94 +245,293 @@
                     <iframe id="lesson-iframe" class="w-full h-full" src="" allowfullscreen></iframe>
                 </div>
 
-                <div class="space-y-4">
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                        <label id="write-prompt-label" class="block text-xs font-bold text-slate-600 mb-1">✍️ تمرين الكتابة</label>
-                        <input type="text" id="userInput" placeholder="اكتب الإجابة..." class="w-full p-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <button onclick="checkWriting()" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق من الإجابة</button>
-                        <div id="writingResult" class="text-xs font-bold mt-1"></div>
-                    </div>
+                <div id="interactive-exercises-list" class="space-y-4"></div>
 
-                    <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-                        <label id="speak-prompt-label" class="block text-xs font-bold text-slate-600 mb-1">🎤 تمرين النطق</label>
-                        <button onclick="startSpeechTest()" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
-                            <span>اضغط وتحدث</span><span>🎙️</span>
-                        </button>
-                        <div id="speechResult" class="text-xs font-bold mt-1"></div>
-                    </div>
-
-                    <button id="finish-lesson-btn" onclick="triggerGiftBoxModal()" class="hidden w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm animate-bounce mt-4">
-                        🎁 استلم مكافأة الدرس والنقاط ←
-                    </button>
-                </div>
+                <button id="finish-lesson-btn" onclick="triggerGiftBoxModal()" class="hidden w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm animate-bounce mt-4">
+                    🎁 استلم مكافأة الدرس والنقاط ←
+                </button>
             </div>
         </div>
 
 
-        <!-- 5. نافذة صندوق الهدايا التفاعلي (Gift Box Modal) -->
-        <div id="gift-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col justify-center items-center p-6 text-center">
-            
-            <h3 id="gift-title" class="text-2xl font-black text-amber-300 mb-2">تهانينا! أكملت الدرس 🥳</h3>
-            <p id="gift-subtitle" class="text-xs text-slate-200 mb-8">اضغط على صندوق الهدايا لفتحه واستلام مكافأتك!</p>
+        <!-- 5. نافذة صندوق الهدايا والمكافآت (Glow Celebration Modal) -->
+        <div id="gift-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col justify-center items-center p-6 text-center">
+            <h3 id="gift-title" class="text-2xl font-black text-amber-300 mb-1">تهانينا! أكملت الدرس 🥳</h3>
+            <p id="gift-subtitle" class="text-xs text-slate-300 mb-8">اضغط على صندوق الهدايا لمشاهدة مكافأتك!</p>
 
-            <!-- عنصر صندوق الهدايا القابل للنقر -->
-            <div id="gift-box" onclick="openGiftBox()" class="cursor-pointer gift-bounce p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 hover:scale-105 transition">
-                <span id="gift-icon" class="text-8xl block select-none">🎁</span>
+            <div id="gift-box" onclick="openGiftBox()" class="cursor-pointer gift-bounce p-6 rounded-3xl bg-gradient-to-b from-amber-400/20 to-amber-600/30 border-2 border-amber-400/50 hover:scale-105 transition shadow-2xl">
+                <span id="gift-icon" class="text-8xl block select-none drop-shadow-lg">🎁</span>
             </div>
 
-            <!-- النقاط التي تظهر بعد الفتح -->
-            <div id="reward-display" class="hidden flex-col items-center space-y-2 mt-6 animate-pop">
-                <span class="text-5xl">⚡</span>
-                <span id="earned-xp-text" class="text-4xl font-black text-amber-400">+5 XP</span>
-                <span class="text-xs text-slate-300 font-bold">تم إضافة النقاط إلى حسابك بنجاح!</span>
+            <div id="reward-card" class="hidden flex-col items-center w-full max-w-xs bg-gradient-to-b from-slate-900 via-slate-800 to-indigo-950 p-6 rounded-3xl border-2 border-amber-400/60 reward-glow animate-pop">
+                <div class="relative mb-3">
+                    <span class="text-6xl block drop-shadow-md">🏆</span>
+                    <span class="absolute -top-2 -right-2 text-2xl animate-spin">✨</span>
+                </div>
+
+                <h4 class="text-amber-300 font-extrabold text-sm mb-1">مكافأة الإنجاز</h4>
+                <div id="earned-xp-badge" class="bg-gradient-to-r from-amber-500 to-amber-600 text-white font-black text-3xl px-6 py-2 rounded-2xl shadow-lg my-2 border border-amber-300">
+                    +5 XP
+                </div>
                 
-                <button onclick="claimRewardAndNext()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 px-8 rounded-xl shadow-xl btn-3d text-sm mt-6">
-                    الانتقال للدرس التالي 🚀
+                <p class="text-[11px] text-slate-300 font-medium mb-6">تم إضافة النقاط وفتح المرحلة التالية!</p>
+                
+                <button onclick="claimRewardAndNext()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-black py-3 rounded-xl shadow-lg btn-3d text-sm">
+                    الانتقال للمرحلة التالية 🚀
                 </button>
             </div>
-
         </div>
 
     </div>
 
-    <!-- JavaScript لتوليد اللوحة وحفظ البيانات وتأثيرات الهدايا -->
+    <!-- JavaScript بـ 20 مرحلة محددة الأيقونات والقيود التفاعلية -->
     <script>
         let userXP = parseInt(localStorage.getItem('user_xp')) || 0;
         let lessonErrors = 0;
         let activeLessonIndex = 0;
         let currentEarnedXP = 5;
 
+        /* الـ 20 مرحلة مع أيقوناتها التعبيرية المعبرة بأسلوب Duolingo */
         let defaultLessons = [
             {
                 id: 1,
-                name: "الدرس 1: التحية والترحيب",
+                name: "التحيات والتعارف",
+                icon: "👋",
                 videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                writePrompt: "اكتب بالإنجليزية كلمة 'مرحباً'",
-                writeTarget: "hello",
-                speakPrompt: "انطق كلمة 'Hello' بصوت واضح",
-                speakTarget: "hello",
-                unlocked: true
+                writeQuestions: [
+                    { prompt: "اكتب كلمة 'مرحباً' بالإنجليزية المذكورة بالفيديو", target: "hello" },
+                    { prompt: "اكتب جملة 'سررت بلقائك'", target: "nice to meet you" }
+                ],
+                speakQuestions: [
+                    { prompt: "انطق كلمة 'Hello' بنطق واضح", target: "hello" },
+                    { prompt: "انطق جملة 'How are you' بصوتك", target: "how are you" }
+                ],
+                choiceQuestions: [
+                    { question: "ما معنى 'Nice to meet you' بالفيديو؟", optA: "سررت بلقائك", optB: "صباح الخير", type: "mc", correct: "سررت بلقائك" },
+                    { question: "هل كلمة Hello تُستخدم للتعارف بالإنجليزية؟", optA: "صح", optB: "خطأ", type: "tf", correct: "صح" }
+                ],
+                unlocked: true,
+                completed: false
             },
             {
                 id: 2,
-                name: "الدرس 2: الأرقام والألوان",
+                name: "الأرقام وحساب الأشياء",
+                icon: "🔢",
                 videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-                writePrompt: "اكتب بالإنجليزية الرقم 'واحد'",
-                writeTarget: "one",
-                speakPrompt: "انطق كلمة 'One' بصوت واضح",
-                speakTarget: "one",
-                unlocked: false
+                writeQuestions: [{ prompt: "اكتب الرقم 'واحد' بالإنجليزية", target: "one" }, { prompt: "اكتب الرقم 'خمسة' بالإنجليزية", target: "five" }],
+                speakQuestions: [{ prompt: "انطق الرقم 'Three' بالإنجليزية", target: "three" }],
+                choiceQuestions: [{ question: "ما هو الرقم التالي للرقم Nine؟", optA: "Ten", optB: "Eight", type: "mc", correct: "Ten" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 3,
+                name: "الألوان وتسمية الأشياء",
+                icon: "🎨",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب اسم اللون 'الأحمر'", target: "red" }, { prompt: "اكتب اسم اللون 'الأزرق'", target: "blue" }],
+                speakQuestions: [{ prompt: "انطق كلمة اللون الأصفر 'Yellow'", target: "yellow" }],
+                choiceQuestions: [{ question: "ما معنى كلمة 'Green' بالفيديو؟", optA: "أخضر", optB: "أسود", type: "mc", correct: "أخضر" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 4,
+                name: "عائلتي وأقربائي",
+                icon: "👨‍👩‍👧",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'أب' بالإنجليزية", target: "father" }, { prompt: "اكتب كلمة 'أم' بالإنجليزية", target: "mother" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Brother' بالإنجليزية", target: "brother" }],
+                choiceQuestions: [{ question: "ما معنى 'Sister' بالفيديو؟", optA: "أخت", optB: "عم", type: "mc", correct: "أخت" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 5,
+                name: "أيام الأسبوع والروتين",
+                icon: "📅",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب يوم 'الإثنين' بالإنجليزية", target: "monday" }, { prompt: "اكتب يوم 'الجمعة' بالإنجليزية", target: "friday" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Sunday' بالإنجليزية", target: "sunday" }],
+                choiceQuestions: [{ question: "كم عدد أيام الأسبوع بالشرح؟", optA: "7", optB: "5", type: "mc", correct: "7" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 6,
+                name: "الضمائر الشخصية",
+                icon: "👤",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب الضمير 'أنا'", target: "i" }, { prompt: "اكتب الضمير 'هو'", target: "he" }],
+                speakQuestions: [{ prompt: "انطق الضمير 'They' بوضوح", target: "they" }],
+                choiceQuestions: [{ question: "ما الضمير المستخدم لـ 'هي'؟", optA: "She", optB: "He", type: "mc", correct: "She" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 7,
+                name: "فعل الكينونة (Verb to Be)",
+                icon: "🧩",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "أكمل الجملة: 'I ___ a student'", target: "am" }],
+                speakQuestions: [{ prompt: "انطق جملة 'They are friends'", target: "they are friends" }],
+                choiceQuestions: [{ question: "ما الفعل الذي يأتي مع الضمير You؟", optA: "are", optB: "is", type: "mc", correct: "are" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 8,
+                name: "الطعام والمشروبات",
+                icon: "🍔",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'تفاحة'", target: "apple" }, { prompt: "اكتب كلمة 'ماء'", target: "water" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Coffee' بصوت واضح", target: "coffee" }],
+                choiceQuestions: [{ question: "ما معنى كلمة Milk بالفيديو؟", optA: "حليب", optB: "عصير", type: "mc", correct: "حليب" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 9,
+                name: "المنزل والأثاث",
+                icon: "🏠",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'غرفة النوم'", target: "bedroom" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'House' بالإنجليزية", target: "house" }],
+                choiceQuestions: [{ question: "أين نعد الطعام بالمطبخ؟", optA: "Kitchen", optB: "Bathroom", type: "mc", correct: "Kitchen" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 10,
+                name: "اختبار المستويات الأولى",
+                icon: "⭐",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب جملة 'شكراً لك'", target: "thank you" }],
+                speakQuestions: [{ prompt: "انطق جملة 'Good morning'", target: "good morning" }],
+                choiceQuestions: [{ question: "هل أنهيت المستوى المبتدئ بنجاح؟", optA: "نعم", optB: "لا", type: "tf", correct: "نعم" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 11,
+                name: "المضارع البسيط والروتين",
+                icon: "⏰",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'يلعب'", target: "play" }],
+                speakQuestions: [{ prompt: "انطق جملة 'I eat breakfast'", target: "i eat breakfast" }],
+                choiceQuestions: [{ question: "هل نضيف s للفعل مع الضمير He بالمضارع البسيط؟", optA: "صح", optB: "خطأ", type: "tf", correct: "صح" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 12,
+                name: "الوقت والمواعيد",
+                icon: "⌚",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'الساعة'", target: "clock" }],
+                speakQuestions: [{ prompt: "انطق جملة 'What time is it'", target: "what time is it" }],
+                choiceQuestions: [{ question: "كيف نقول 'الساعة الخامسة تماماً'؟", optA: "Five o'clock", optB: "Five minutes", type: "mc", correct: "Five o'clock" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 13,
+                name: "التسوق والأسعار",
+                icon: "🛍️",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب 'كم السعر؟'", target: "how much" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Price' بوضوح", target: "price" }],
+                choiceQuestions: [{ question: "ما معنى 'How much is this'؟", optA: "كم سعر هذا؟", optB: "أين هذا؟", type: "mc", correct: "كم سعر هذا؟" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 14,
+                name: "الملابس والموضة",
+                icon: "👕",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'قميص'", target: "shirt" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Jacket' بالإنجليزية", target: "jacket" }],
+                choiceQuestions: [{ question: "ما معنى كلمة Dress؟", optA: "فستان", optB: "قبعة", type: "mc", correct: "فستان" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 15,
+                name: "السفر والاتجاهات",
+                icon: "✈️",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'يمين'", target: "right" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Go straight' بوضوح", target: "go straight" }],
+                choiceQuestions: [{ question: "ما معنى كلمة 'Car'؟", optA: "سيارة", optB: "قطار", type: "mc", correct: "سيارة" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 16,
+                name: "الماضي والأحداث السابقة",
+                icon: "📜",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "ما الماضي من الفعل 'go'؟", target: "went" }],
+                speakQuestions: [{ prompt: "انطق جملة 'I went to school'", target: "i went to school" }],
+                choiceQuestions: [{ question: "الماضي من الفعل see هو:", optA: "saw", optB: "seen", type: "mc", correct: "saw" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 17,
+                name: "المستقبل والتخطيط",
+                icon: "🔮",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب أداة المستقبل 'سوف'", target: "will" }],
+                speakQuestions: [{ prompt: "انطق جملة 'I will travel'", target: "i will travel" }],
+                choiceQuestions: [{ question: "نستخدم Will للتعبير عن المستقبل؟", optA: "صح", optB: "خطأ", type: "tf", correct: "صح" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 18,
+                name: "النطق السريع والمحاكاة",
+                icon: "⚡",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب اختصار 'Gonna'", target: "going to" }],
+                speakQuestions: [{ prompt: "انطق اختصار 'Wanna' بالإنجليزية", target: "wanna" }],
+                choiceQuestions: [{ question: "ما الاختصار لـ 'Want to' بالمحادثة؟", optA: "Wanna", optB: "Gonna", type: "mc", correct: "Wanna" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 19,
+                name: "المقابلات والعمل",
+                icon: "💼",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'وظيفة'", target: "job" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Interview' بالإنجليزية", target: "interview" }],
+                choiceQuestions: [{ question: "ما معنى 'Tell me about yourself'؟", optA: "حدثني عن نفسك", optB: "أين تعمل؟", type: "mc", correct: "حدثني عن نفسك" }],
+                unlocked: false,
+                completed: false
+            },
+            {
+                id: 20,
+                name: "كأس الاحتراف والطلاقة",
+                icon: "🏆",
+                videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+                writeQuestions: [{ prompt: "اكتب كلمة 'مبروك الإنجاز'", target: "congratulations" }],
+                speakQuestions: [{ prompt: "انطق كلمة 'Fluent' بصوت قوي", target: "fluent" }],
+                choiceQuestions: [{ question: "هل أصبحت الآن جاهزاً للطلاقة؟", optA: "نعم وبكل فخر!", optB: "بالتأكيد", type: "mc", correct: "نعم وبكل فخر!" }],
+                unlocked: false,
+                completed: false
             }
         ];
 
         let lessons = JSON.parse(localStorage.getItem('app_lessons')) || defaultLessons;
 
         let leaderboardData = [
-            { name: "سارة أحمد 👑", xp: 145, avatar: "👩‍💼" },
-            { name: "محمد علي", xp: 110, avatar: "👨‍💻" },
+            { name: "سارة أحمد 👑", xp: 185, avatar: "👩‍💼" },
+            { name: "محمد علي", xp: 140, avatar: "👨‍💻" },
             { name: "أنت (المستخدم)", xp: userXP, avatar: "🌟", isUser: true },
-            { name: "عمر خالد", xp: 45, avatar: "🧑‍🎓" },
-            { name: "فاطمة حسن", xp: 20, avatar: "👧" }
+            { name: "عمر خالد", xp: 95, avatar: "🧑‍🎓" },
+            { name: "فاطمة حسن", xp: 50, avatar: "👧" }
         ];
 
         function updateXPDisplay() {
@@ -371,31 +599,34 @@
             renderLessonsPath();
         }
 
+        /* توليد وعرض خريطة الطريق بأسلوب دولينجو (مفتوح / مغلق بأسلوب الأيقونات) */
         function renderLessonsPath() {
             const container = document.getElementById('lessons-path-container');
-            container.innerHTML = '<div class="absolute w-2 bg-slate-300 top-6 bottom-6 -z-0 rounded-full"></div>';
+            container.innerHTML = '<div class="absolute w-2.5 bg-slate-200 top-6 bottom-6 -z-0 rounded-full"></div>';
 
             lessons.forEach((lesson, index) => {
                 const node = document.createElement('div');
-                const offsetClass = index % 2 === 1 ? 'translate-x-6' : '-translate-x-6';
+                const offsetClass = index % 2 === 1 ? 'translate-x-7' : '-translate-x-7';
                 node.className = `relative z-10 path-node ${index === 0 ? '' : offsetClass}`;
 
                 if (lesson.unlocked) {
+                    // المرحلة المفتوحة للتفاعل
                     node.innerHTML = `
-                        <button onclick="openLessonByIndex(${index})" class="w-16 h-16 bg-emerald-500 text-white rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-emerald-700 btn-3d shadow-lg ring-4 ring-emerald-200">
-                            ⭐
+                        <button onclick="openLessonByIndex(${index})" class="w-16 h-16 bg-emerald-500 hover:bg-emerald-400 text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 border-emerald-700 btn-3d shadow-lg ring-4 ring-emerald-200 active-ring">
+                            ${lesson.icon || '⭐'}
                         </button>
-                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-700 whitespace-nowrap">
-                            ${lesson.name}
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[10px] font-black px-2 py-0.5 rounded-full shadow border text-emerald-800 whitespace-nowrap">
+                            ${index + 1}. ${lesson.name}
                         </div>
                     `;
                 } else {
+                    // المرحلة المغلقة (غير قابلة للنقر)
                     node.innerHTML = `
-                        <button class="w-16 h-16 bg-slate-300 text-slate-500 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-400 cursor-not-allowed">
+                        <button onclick="showLockedAlert(${index+1})" class="w-16 h-16 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center text-2xl font-black border-b-4 border-slate-300 cursor-not-allowed">
                             🔒
                         </button>
-                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-400 whitespace-nowrap">
-                            مغلق
+                        <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow border text-slate-400 whitespace-nowrap opacity-80">
+                            ${index + 1}. ${lesson.name}
                         </div>
                     `;
                 }
@@ -403,120 +634,168 @@
             });
         }
 
+        function showLockedAlert(num) {
+            alert(`🔒 المرحلة رقم (${num}) مغلقة! أكمل المرحلة السابقة أولاً لفتح هذه المرحلة.`);
+        }
+
         function openLessonByIndex(index) {
             activeLessonIndex = index;
             lessonErrors = 0;
             const lesson = lessons[index];
 
-            document.getElementById('current-lesson-name').innerText = lesson.name;
+            document.getElementById('current-lesson-name').innerText = `مرحلة ${index+1}: ${lesson.name}`;
             document.getElementById('lesson-iframe').src = lesson.videoUrl;
-            document.getElementById('write-prompt-label').innerText = "✍️ " + lesson.writePrompt;
-            document.getElementById('speak-prompt-label').innerText = "🎤 " + lesson.speakPrompt;
 
-            document.getElementById('userInput').value = '';
-            document.getElementById('writingResult').innerText = '';
-            document.getElementById('speechResult').innerText = '';
-            document.getElementById('finish-lesson-btn').classList.add('hidden');
+            const exercisesList = document.getElementById('interactive-exercises-list');
+            exercisesList.innerHTML = '';
 
+            // 1. تمارين الكتابة
+            if (lesson.writeQuestions && lesson.writeQuestions.length > 0) {
+                lesson.writeQuestions.forEach((q, i) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200";
+                    card.innerHTML = `
+                        <label class="block text-xs font-bold text-slate-700 mb-1">✍️ تمرين كتابة (${i+1}): ${q.prompt}</label>
+                        <input type="text" class="w-full p-2.5 rounded-lg border text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 write-input-${i}" placeholder="اكتب الإجابة بالإنجليزية...">
+                        <button onclick="checkWritingItem(${i}, '${q.target}')" class="w-full bg-indigo-600 text-white font-bold py-2 rounded-lg mt-2 text-sm btn-3d">تحقق من الإجابة</button>
+                        <div class="text-xs font-bold mt-1 write-res-${i}"></div>
+                    `;
+                    exercisesList.appendChild(card);
+                });
+            }
+
+            // 2. تمارين النطق
+            if (lesson.speakQuestions && lesson.speakQuestions.length > 0) {
+                lesson.speakQuestions.forEach((q, i) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200";
+                    card.innerHTML = `
+                        <label class="block text-xs font-bold text-slate-700 mb-1">🎤 تمرين نطق (${i+1}): ${q.prompt}</label>
+                        <button onclick="startSpeechItem(${i}, '${q.target}')" class="w-full bg-amber-500 text-white font-bold py-2.5 rounded-lg flex items-center justify-center space-x-2 space-x-reverse text-sm btn-3d">
+                            <span>اضغط وتحدث</span><span>🎙️</span>
+                        </button>
+                        <div class="text-xs font-bold mt-1 speak-res-${i}"></div>
+                    `;
+                    exercisesList.appendChild(card);
+                });
+            }
+
+            // 3. أسئلة الخيارات
+            if (lesson.choiceQuestions && lesson.choiceQuestions.length > 0) {
+                lesson.choiceQuestions.forEach((q, i) => {
+                    const card = document.createElement('div');
+                    card.className = "bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2";
+                    card.innerHTML = `
+                        <label class="block text-xs font-bold text-slate-800">🌟 سؤال (${i+1}): ${q.question}</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="checkChoiceAnswer(this, '${q.optA}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optA}</button>
+                            <button onclick="checkChoiceAnswer(this, '${q.optB}', '${q.correct}')" class="bg-white border p-2 rounded-lg text-xs font-bold hover:bg-slate-100">${q.optB}</button>
+                        </div>
+                        <div class="text-xs font-bold mt-1 choice-res"></div>
+                    `;
+                    exercisesList.appendChild(card);
+                });
+            }
+
+            document.getElementById('finish-lesson-btn').classList.remove('hidden');
             document.getElementById('lesson-modal').classList.remove('hidden');
         }
 
-        function checkWriting() {
-            const val = document.getElementById('userInput').value.trim().toLowerCase();
-            const res = document.getElementById('writingResult');
-            const target = lessons[activeLessonIndex].writeTarget;
+        function checkWritingItem(index, target) {
+            const input = document.querySelector(`.write-input-${index}`);
+            const res = document.querySelector(`.write-res-${index}`);
+            const val = input.value.trim().toLowerCase();
 
-            if (val === target) {
+            if (val === target.trim().toLowerCase()) {
                 res.className = "text-xs font-bold mt-1 text-emerald-600";
                 res.innerText = `🎉 ممتاز! إجابة صحيحة.`;
-                checkLessonCompletion();
             } else {
                 lessonErrors++;
                 res.className = "text-xs font-bold mt-1 text-rose-600";
-                res.innerText = `❌ خطأ! الكلمة المطلوبة هي (${target}).`;
+                res.innerText = `❌ خطأ! الكلمة المطلوبة هي: (${target}).`;
             }
         }
 
-        function startSpeechTest() {
-            const speechResult = document.getElementById('speechResult');
+        function startSpeechItem(index, target) {
+            const res = document.querySelector(`.speak-res-${index}`);
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
             if (!SpeechRecognition) {
-                speechResult.className = "text-xs font-bold mt-1 text-rose-600";
-                speechResult.innerText = "استخدم Google Chrome.";
+                res.className = "text-xs font-bold mt-1 text-rose-600";
+                res.innerText = "استخدم Google Chrome.";
                 return;
             }
 
             const recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
-            const target = lessons[activeLessonIndex].speakTarget;
 
-            speechResult.className = "text-xs font-bold mt-1 text-indigo-600 animate-pulse";
-            speechResult.innerText = `🎙️ تحدث الآن...`;
+            res.className = "text-xs font-bold mt-1 text-indigo-600 animate-pulse";
+            res.innerText = `🎙️ تحدث الآن...`;
 
             recognition.onresult = function(event) {
                 const spokenText = event.results[0][0].transcript.trim().toLowerCase();
                 if (spokenText.includes(target) || spokenText === target) {
-                    speechResult.className = "text-xs font-bold mt-1 text-emerald-600";
-                    speechResult.innerText = `🎉 نطق صحيح!`;
-                    checkLessonCompletion();
+                    res.className = "text-xs font-bold mt-1 text-emerald-600";
+                    res.innerText = `🎉 نطق صحيح!`;
                 } else {
                     lessonErrors++;
-                    speechResult.className = "text-xs font-bold mt-1 text-rose-600";
-                    speechResult.innerText = `❌ إجابة خاطئة! سمعنا (${spokenText}). المطلوب (${target}).`;
+                    res.className = "text-xs font-bold mt-1 text-rose-600";
+                    res.innerText = `❌ إجابة خاطئة! سمعنا (${spokenText}). المطلوب (${target}).`;
                 }
             };
             recognition.start();
         }
 
-        function checkLessonCompletion() {
-            document.getElementById('finish-lesson-btn').classList.remove('hidden');
+        function checkChoiceAnswer(btn, chosen, correct) {
+            const feedback = btn.parentElement.nextElementSibling;
+            if (chosen.trim().toLowerCase() === correct.trim().toLowerCase()) {
+                feedback.className = "text-xs font-bold text-emerald-600 mt-1";
+                feedback.innerText = "🎉 إجابة صحيحة!";
+            } else {
+                lessonErrors++;
+                feedback.className = "text-xs font-bold text-rose-600 mt-1";
+                feedback.innerText = "❌ إجابة خاطئة! أعد المحاولة.";
+            }
         }
 
-        /* دالة تشغيل نافذة صندوق الهدايا الاحتفالي */
         function triggerGiftBoxModal() {
             closeLesson();
             
-            // احتساب النقاط
             currentEarnedXP = 5;
             if (lessonErrors === 1 || lessonErrors === 2) currentEarnedXP = 3;
             else if (lessonErrors > 2) currentEarnedXP = 1;
 
-            // إعداد الحالة المبدئية للصندوق
-            document.getElementById('gift-icon').innerText = '🎁';
-            document.getElementById('gift-box').className = 'cursor-pointer gift-bounce p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 hover:scale-105 transition';
-            document.getElementById('reward-display').classList.add('hidden');
-            document.getElementById('gift-subtitle').innerText = 'اضغط على صندوق الهدايا لفتحه واستلام مكافأتك!';
+            document.getElementById('gift-box').classList.remove('hidden');
+            document.getElementById('reward-card').classList.add('hidden');
+            document.getElementById('reward-card').classList.remove('flex');
+            document.getElementById('gift-subtitle').innerText = 'اضغط على صندوق الهدايا لمشاهدة مكافأتك!';
 
             document.getElementById('gift-modal').classList.remove('hidden');
         }
 
-        /* دالة فتح صندوق الهدايا بالتأثيرات */
         function openGiftBox() {
-            const giftBox = document.getElementById('gift-box');
-            giftBox.className = 'cursor-default p-4 rounded-3xl bg-amber-500/20 border-2 border-amber-400/40 animate-pop';
+            document.getElementById('gift-box').classList.add('hidden');
+            document.getElementById('gift-subtitle').innerText = 'تهانينا على هذا الإنجاز الرائع!';
             
-            document.getElementById('gift-icon').innerText = '📦✨';
-            document.getElementById('gift-subtitle').innerText = 'تم فتح الصندوق!';
-            
-            document.getElementById('earned-xp-text').innerText = `+${currentEarnedXP} XP`;
-            document.getElementById('reward-display').classList.remove('hidden');
-            document.getElementById('reward-display').classList.add('flex');
+            document.getElementById('earned-xp-badge').innerText = `+${currentEarnedXP} XP`;
+            document.getElementById('reward-card').classList.remove('hidden');
+            document.getElementById('reward-card').classList.add('flex');
 
-            // تحديث الحساب بالنقاط
             userXP += currentEarnedXP;
             updateXPDisplay();
         }
 
-        /* استلام المكافأة والإغلاق للانتقال للدرس التالي */
         function claimRewardAndNext() {
             document.getElementById('gift-modal').classList.add('hidden');
+
+            // تعليم المرحلة الحالية كـ مكتملة، وفتح المرحلة التالية أوتوماتيكياً
+            lessons[activeLessonIndex].completed = true;
 
             if (activeLessonIndex + 1 < lessons.length) {
                 lessons[activeLessonIndex + 1].unlocked = true;
                 localStorage.setItem('app_lessons', JSON.stringify(lessons));
                 renderLessonsPath();
-                openLessonByIndex(activeLessonIndex + 1);
+                openLessonByIndex(activeLessonIndex + 1); // فتح المرحلة التالية فوراً
             } else {
                 renderLessonsPath();
             }
@@ -527,20 +806,91 @@
             document.getElementById('lesson-iframe').src = '';
         }
 
-        function openAdmin() { document.getElementById('admin-screen').classList.remove('hidden'); }
+        function openAdmin() { 
+            document.getElementById('admin-screen').classList.remove('hidden'); 
+            if(document.getElementById('write-questions-container').children.length === 0) {
+                addWriteQuestionField();
+                addSpeakQuestionField();
+            }
+        }
         function closeAdmin() { document.getElementById('admin-screen').classList.add('hidden'); }
+
+        function addWriteQuestionField() {
+            const container = document.getElementById('write-questions-container');
+            const div = document.createElement('div');
+            div.className = "bg-indigo-50 p-3 rounded-xl border border-indigo-100 space-y-2 relative";
+            div.innerHTML = `
+                <input type="text" class="write-prompt w-full p-2 rounded-lg border text-xs" placeholder="السؤال: اكتب كلمة 'تفاحة'">
+                <input type="text" class="write-target w-full p-2 rounded-lg border text-xs" placeholder="الكلمة الإنجليزية الصحيحة: apple">
+            `;
+            container.appendChild(div);
+        }
+
+        function addSpeakQuestionField() {
+            const container = document.getElementById('speak-questions-container');
+            const div = document.createElement('div');
+            div.className = "bg-amber-50 p-3 rounded-xl border border-amber-100 space-y-2 relative";
+            div.innerHTML = `
+                <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" placeholder="السؤال: انطق كلمة (Apple)">
+                <input type="text" class="speak-target w-full p-2 rounded-lg border text-xs" placeholder="الكلمة المطلوب نطقها: apple">
+            `;
+            container.appendChild(div);
+        }
+
+        function addChoiceQuestionField() {
+            const container = document.getElementById('choice-questions-container');
+            const div = document.createElement('div');
+            div.className = "bg-emerald-50 p-3 rounded-xl border border-emerald-100 space-y-2 relative";
+            div.innerHTML = `
+                <input type="text" class="choice-q w-full p-2 rounded-lg border text-xs" placeholder="السؤال التفاعلي...">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" class="choice-a w-full p-2 rounded-lg border text-xs" placeholder="الخيار الأول (A)">
+                    <input type="text" class="choice-b w-full p-2 rounded-lg border text-xs" placeholder="الخيار الثاني (B)">
+                </div>
+                <input type="text" class="choice-correct w-full p-2 rounded-lg border text-xs" placeholder="الإجابة الصحيحة بالضبط">
+            `;
+            container.appendChild(div);
+        }
 
         function saveLesson(e) {
             e.preventDefault();
+            
+            const writeCards = document.querySelectorAll('#write-questions-container > div');
+            const writeQuestions = [];
+            writeCards.forEach(c => {
+                const prompt = c.querySelector('.write-prompt').value;
+                const target = c.querySelector('.write-target').value;
+                if(prompt && target) writeQuestions.push({ prompt, target });
+            });
+
+            const speakCards = document.querySelectorAll('#speak-questions-container > div');
+            const speakQuestions = [];
+            speakCards.forEach(c => {
+                const prompt = c.querySelector('.speak-prompt').value;
+                const target = c.querySelector('.speak-target').value;
+                if(prompt && target) speakQuestions.push({ prompt, target });
+            });
+
+            const choiceCards = document.querySelectorAll('#choice-questions-container > div');
+            const choiceQuestions = [];
+            choiceCards.forEach(c => {
+                const question = c.querySelector('.choice-q').value;
+                const optA = c.querySelector('.choice-a').value;
+                const optB = c.querySelector('.choice-b').value;
+                const correct = c.querySelector('.choice-correct').value;
+                if(question && correct) choiceQuestions.push({ question, optA, optB, correct });
+            });
+
             const newLesson = {
                 id: Date.now(),
                 name: document.getElementById('lesson-name-input').value,
+                icon: document.getElementById('lesson-icon-input').value || '⭐',
                 videoUrl: document.getElementById('lesson-video-input').value,
-                writePrompt: document.getElementById('write-prompt-input').value,
-                writeTarget: document.getElementById('write-target-input').value.trim().toLowerCase(),
-                speakPrompt: document.getElementById('speak-prompt-input').value,
-                speakTarget: document.getElementById('speak-target-input').value.trim().toLowerCase(),
-                unlocked: false
+                writeQuestions,
+                speakQuestions,
+                choiceQuestions,
+                unlocked: false,
+                completed: false
             };
 
             lessons.push(newLesson);
