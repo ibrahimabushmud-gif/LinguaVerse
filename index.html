@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة طلاقة - تعلم الإنجليزية بكل سهولة</title>
+    <!-- استيراد الخطوط والتصميم السريع -->
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-color: #1f2937;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        header {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .hidden {
+            display: none !important;
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* نسبة العرض للإرتفاع 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        .exercise-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+        .result {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>منصة طلاقة التعليمية (LinguaVerse)</header>
+
+    <!-- واجهة اختيار المسار -->
+    <div id="welcome-screen" class="container" style="text-align: center;">
+        <h2>مرحباً بك! اختر مسار التعلم الخاص بك</h2>
+        <p>ابدأ رحلتك من الصفر حتى الاحتراف بطريقة تفاعلية ممتعة.</p>
+        <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <button onclick="startApp('kids')" style="background-color: #10b981;">مسار الصغار 🧸</button>
+            <button onclick="startApp('adults')">مسار الكبار 👨‍🎓</button>
+        </div>
+    </div>
+
+    <!-- واجهة الدرس التفاعلي -->
+    <div id="lesson-screen" class="container hidden">
+        <h3 id="lesson-title">الدرس الأول: التحية والتعارف (Greetings)</h3>
+        
+        <!-- مشغل الفيديو -->
+        <div class="video-container">
+            <!-- استبدل الرابط أدناه بأي فيديو يوتيوب تعليمي -->
+            <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+        </div>
+
+        <!-- التمارين التفاعلية -->
+        <div class="exercise-box">
+            <h4>1. تمرين الكتابة الإملائية:</h4>
+            <p>اكتب باللغة الإنجليزية: "أهلاً بك، كيف حالك؟"</p>
+            <input type="text" id="userInput" placeholder="اكتب إجابتك هنا...">
+            <button onclick="checkWriting()">تحقق من الإجابة</button>
+            <div id="writingResult" class="result"></div>
+        </div>
+
+        <div class="exercise-box">
+            <h4>2. تمرين النطق الصوتي (AI Speech):</h4>
+            <p>انقر على الزر واقرأ هذه الكلمة بصوت واضح: <strong>"Hello World"</strong></p>
+            <button onclick="startSpeechTest()" style="background-color: #f59e0b;">اضغط وابدأ التحدث 🎤</button>
+            <div id="speechResult" class="result"></div>
+        </div>
+
+        <button onclick="goBack()" style="background-color: #6b7280; margin-top: 2rem;">العودة للخلف</button>
+    </div>
+
+    <script>
+        function startApp(track) {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('lesson-screen').classList.remove('hidden');
+            if(track === 'kids') {
+                document.getElementById('lesson-title').innerText = "🧸 مسار الصغار: تعلم الكلمات بالصور والألوان";
+            } else {
+                document.getElementById('lesson-title').innerText = "👨‍🎓 مسار الكبار: المحادثة والقواعد المتقدمة";
+            }
+        }
+
+        function goBack() {
+            document.getElementById('lesson-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+        }
+
+        function checkWriting() {
+            const val = document.getElementById('userInput').value.trim().toLowerCase();
+            const res = document.getElementById('writingResult');
+            if(val.includes("hello") || val.includes("how are you")) {
+                res.style.color = "green";
+                res.innerText = "إجابة صحيحة! أحسنت 🌟";
+            } else {
+                res.style.color = "red";
+                res.innerText = "حاول مرة أخرى، الإجابة تتضمن Hello أو How are you.";
+            }
+        }
+
+        // تمرين النطق باستخدام المتصفح الداخلي
+        function startSpeechTest() {
+            const speechResult = document.getElementById('speechResult');
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            
+            if (!SpeechRecognition) {
+                speechResult.style.color = "red";
+                speechResult.innerText = "متصفحك لا يدعم خاصية التعرف على الصوت، جرب متصفح Google Chrome.";
+                return;
+            }
+
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
+            speechResult.style.color = "blue";
+            speechResult.innerText = "جاري الاستماع... تحدث الآن 🎙️";
+
+            recognition.onresult = function(event) {
+                const speechText = event.results[0][0].transcript;
+                speechResult.style.color = "green";
+                speechResult.innerText = `قلتَ: "${speechText}" - ممتاز جداً!`;
+            };
+
+            recognition.onerror = function() {
+                speechResult.style.color = "red";
+                speechResult.innerText = "حدث خطأ في التقاط الصوت، حاول مجدداً.";
+            };
+
+            recognition.start();
+        }
+    </script>
+</body>
+</html>
