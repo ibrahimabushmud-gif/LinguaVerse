@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>طلاقة - تطبيق تعلم الإنجليزية (النسخة الكاملة الشاملة)</title>
+    <title>طلاقة - تطبيق تعلم الإنجليزية (النسخة الكاملة الشاملة والمصححة)</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- خط تجريدي عالي الجودة -->
@@ -69,7 +69,7 @@
     <div class="w-full max-w-md bg-slate-100 min-h-screen flex flex-col justify-between relative overflow-hidden shadow-2xl">
 
         <!-- 1. شاشة اختيار الفئة عند الدخول (Onboarding Screen) -->
-        <div id="onboarding-screen" class="flex-1 flex flex-col justify-between p-6 bg-indigo-600 text-white z-50">
+        <div id="onboarding-screen" class="absolute inset-0 flex flex-col justify-between p-6 bg-indigo-600 text-white z-50 transition-opacity duration-300">
             <div class="text-center pt-8">
                 <div class="w-20 h-20 bg-white/10 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 border border-white/20 shadow-inner">
                     🚀
@@ -297,14 +297,13 @@
 
     </div>
 
-    <!-- JavaScript بـ 20 مرحلة محددة وإدارة الفيديوهات والمسارات الشاملة -->
+    <!-- JavaScript مع إصلاح دقيق للانتقال السريع والشامل -->
     <script>
-        let userXP = parseInt(localStorage.getItem('user_xp_full')) || 0;
+        let userXP = parseInt(localStorage.getItem('user_xp_fixed')) || 0;
         let lessonErrors = 0;
         let activeLessonIndex = 0;
         let currentEarnedXP = 5;
 
-        /* الـ 20 درس المحضرة بدقة مع أيقونات وفيديوهات متنوعة */
         let full20Lessons = [
             {
                 id: 1, name: "التحيات والتعارف", icon: "👋",
@@ -468,10 +467,10 @@
             }
         ];
 
-        let lessons = JSON.parse(localStorage.getItem('app_lessons_full')) || full20Lessons;
+        let lessons = JSON.parse(localStorage.getItem('app_lessons_fixed')) || full20Lessons;
         if (lessons.length < 20) {
             lessons = full20Lessons;
-            localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
+            localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
         }
 
         let leaderboardData = [
@@ -484,7 +483,7 @@
 
         function updateXPDisplay() {
             document.getElementById('user-xp').innerText = userXP;
-            localStorage.setItem('user_xp_full', userXP);
+            localStorage.setItem('user_xp_fixed', userXP);
             renderLeaderboard();
         }
 
@@ -532,13 +531,18 @@
             });
         }
 
-        /* اختيار المسار بنجاح وانتقال فوري */
+        /* التصحيح الجذري لدالة الانتقال وتجاوز واجهة البداية فوراً */
         function selectTrack(track) {
             const onboarding = document.getElementById('onboarding-screen');
             const mainApp = document.getElementById('main-app');
 
-            if (onboarding) onboarding.style.display = 'none';
-            if (mainApp) mainApp.classList.remove('hidden');
+            if (onboarding) {
+                onboarding.style.display = 'none';
+                onboarding.classList.add('hidden');
+            }
+            if (mainApp) {
+                mainApp.classList.remove('hidden');
+            }
 
             if(track === 'kids') {
                 document.getElementById('track-title').innerText = "الصغار 🧸";
@@ -755,11 +759,11 @@
 
             if (activeLessonIndex + 1 < lessons.length) {
                 lessons[activeLessonIndex + 1].unlocked = true;
-                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
                 renderLessonsPath();
                 openLessonByIndex(activeLessonIndex + 1);
             } else {
-                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
                 renderLessonsPath();
             }
         }
@@ -827,7 +831,7 @@
         function deleteLesson(id) {
             if (confirm("هل أنت تأكد من إزالة هذا الدرس من التطبيق؟")) {
                 lessons = lessons.filter(l => l.id !== id);
-                localStorage.setItem('app_lessons_full', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
                 renderAdminLessonsList();
                 renderLessonsPath();
             }
@@ -859,5 +863,4 @@
             const div = document.createElement('div');
             div.className = "bg-amber-50 p-3 rounded-xl border border-amber-100 space-y-2 relative";
             div.innerHTML = `
-                <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" value="${prompt}" placeholder="السؤال: انطق كلمة (Apple)">
-                <input type="text" class="speak-target w-full
+                <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" valu
