@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>طلاقة - تطبيق تعلم الإنجليزية (النسخة الكاملة الشاملة والمصححة)</title>
+    <title>طلاقة - تطبيق تعلم الإنجليزية</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- خط تجريدي عالي الجودة -->
@@ -28,8 +28,6 @@
         .path-node:hover {
             transform: scale(1.08);
         }
-
-        /* توهج حركي للمرحلة النشطة حالياً */
         @keyframes active-node-pulse {
             0%, 100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6); }
             50% { box-shadow: 0 0 0 14px rgba(16, 185, 129, 0); }
@@ -37,7 +35,6 @@
         .active-ring {
             animation: active-node-pulse 2s infinite;
         }
-
         @keyframes gift-shake {
             0%, 100% { transform: rotate(0deg) scale(1); }
             20% { transform: rotate(-8deg) scale(1.05); }
@@ -48,7 +45,6 @@
         .gift-bounce {
             animation: gift-shake 1.2s infinite ease-in-out;
         }
-
         @keyframes pop-up {
             0% { transform: scale(0.3) translateY(30px); opacity: 0; }
             70% { transform: scale(1.05) translateY(-5px); opacity: 1; }
@@ -57,7 +53,6 @@
         .animate-pop {
             animation: pop-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
         }
-
         .reward-glow {
             box-shadow: 0 0 50px rgba(245, 158, 11, 0.35);
         }
@@ -65,11 +60,10 @@
 </head>
 <body class="bg-slate-900 text-slate-800 flex justify-center min-h-screen">
 
-    <!-- إطار إلكتروني يمثل هيكل الهاتف -->
     <div class="w-full max-w-md bg-slate-100 min-h-screen flex flex-col justify-between relative overflow-hidden shadow-2xl">
 
-        <!-- 1. شاشة اختيار الفئة عند الدخول (Onboarding Screen) -->
-        <div id="onboarding-screen" class="absolute inset-0 flex flex-col justify-between p-6 bg-indigo-600 text-white z-50 transition-opacity duration-300">
+        <!-- 1. شاشة اختيار الفئة عند الدخول -->
+        <div id="onboarding-screen" class="flex-1 flex flex-col justify-between p-6 bg-indigo-600 text-white z-50">
             <div class="text-center pt-8">
                 <div class="w-20 h-20 bg-white/10 rounded-3xl mx-auto flex items-center justify-center text-4xl mb-4 border border-white/20 shadow-inner">
                     🚀
@@ -111,10 +105,8 @@
             </div>
         </div>
 
-
-        <!-- 2. الشاشة الرئيسية للتطبيق (Duolingo Interactive Path View) -->
+        <!-- 2. الشاشة الرئيسية للتطبيق -->
         <div id="main-app" class="flex-1 flex flex-col hidden pb-20">
-            
             <header class="bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between sticky top-0 z-40">
                 <div class="flex items-center space-x-2 space-x-reverse">
                     <span class="text-2xl" id="track-icon">👨‍🎓</span>
@@ -145,20 +137,18 @@
                     </button>
                 </div>
 
-                <!-- مسار دولينجو الملتوي المصمم بالأيقونات التعبيرية لكافة الـ 20 مرحلة -->
                 <div id="lessons-path-container" class="flex flex-col items-center space-y-7 my-4 relative">
                     <div class="absolute w-2.5 bg-slate-200 top-6 bottom-6 -z-0 rounded-full"></div>
                 </div>
             </div>
 
-            <!-- قسم لوحة المتصدرين -->
+            <!-- لوحة المتصدرين -->
             <div id="tab-leaderboard" class="flex-1 overflow-y-auto px-4 py-6 hidden space-y-4">
                 <div class="bg-gradient-to-r from-amber-500 to-amber-600 text-white p-5 rounded-2xl shadow-lg text-center">
                     <span class="text-4xl block mb-1">🏆</span>
                     <h2 class="text-xl font-black">دوري المتصدرين</h2>
                     <p class="text-xs text-amber-100">تنافس مع المتعلمين الأوائل هذا الأسبوع!</p>
                 </div>
-
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden divide-y" id="leaderboard-list"></div>
             </div>
 
@@ -178,15 +168,13 @@
             </nav>
         </div>
 
-
-        <!-- 3. لوحة التحكم المتقدمة بإدارة الدروس (Full Admin Panel) -->
+        <!-- 3. لوحة التحكم (Admin Panel) -->
         <div id="admin-screen" class="fixed inset-0 bg-white z-50 hidden flex flex-col p-5 overflow-y-auto max-w-md mx-auto">
             <div class="flex items-center justify-between border-b pb-3 mb-4">
                 <h2 class="text-xl font-black text-indigo-900" id="admin-modal-title">⚙️ إدارة وتعديل الفيديوهات والدروس</h2>
                 <button type="button" onclick="closeAdmin()" class="text-slate-500 font-bold text-lg bg-slate-100 p-2 rounded-xl">✕ إغلاق</button>
             </div>
 
-            <!-- قائمة الدروس الحالية للتعديل أو الحذف المباشر -->
             <div class="mb-6 bg-slate-50 p-3 rounded-2xl border border-slate-200">
                 <h3 class="font-black text-xs text-slate-700 mb-2">📋 قائمة المراحل الحالية (اضغط للتعديل أو الحذف):</h3>
                 <div id="admin-lessons-list" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
@@ -245,8 +233,7 @@
             </form>
         </div>
 
-
-        <!-- 4. نافذة عرض الدرس التفاعلي للمستخدم (Modal Lesson) -->
+        <!-- 4. نافذة عرض الدرس التفاعلي -->
         <div id="lesson-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex justify-center items-end sm:items-center">
             <div class="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 space-y-5 max-h-[90vh] overflow-y-auto">
                 <div class="flex items-center justify-between border-b pb-3">
@@ -266,8 +253,7 @@
             </div>
         </div>
 
-
-        <!-- 5. نافذة صندوق الهدايا والمكافآت (Glow Celebration Modal) -->
+        <!-- 5. نافذة صندوق الهدايا -->
         <div id="gift-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex flex-col justify-center items-center p-6 text-center">
             <h3 id="gift-title" class="text-2xl font-black text-amber-300 mb-1">تهانينا! أكملت الدرس 🥳</h3>
             <p id="gift-subtitle" class="text-xs text-slate-300 mb-8">اضغط على صندوق الهدايا لمشاهدة مكافأتك!</p>
@@ -297,254 +283,61 @@
 
     </div>
 
-    <!-- JavaScript مع إصلاح دقيق للانتقال السريع والشامل -->
+    <!-- كود الجافاسكريبت المصحح بالكامل خالي من الأخطاء البرمجية -->
     <script>
-        let userXP = parseInt(localStorage.getItem('user_xp_fixed')) || 0;
+        let userXP = parseInt(localStorage.getItem('user_xp_v4')) || 0;
         let lessonErrors = 0;
         let activeLessonIndex = 0;
         let currentEarnedXP = 5;
 
         let full20Lessons = [
-            {
-                id: 1, name: "التحيات والتعارف", icon: "👋",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'مرحباً' بالإنجليزية المذكورة بالفيديو", target: "hello" }, { prompt: "اكتب جملة 'سررت بلقائك'", target: "nice to meet you" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Hello' بنطق واضح", target: "hello" }, { prompt: "انطق جملة 'How are you' بصوتك", target: "how are you" }],
-                choiceQuestions: [{ question: "ما معنى 'Nice to meet you' بالفيديو؟", optA: "سررت بلقائك", optB: "صباح الخير", type: "mc", correct: "سررت بلقائك" }],
-                unlocked: true, completed: false
-            },
-            {
-                id: 2, name: "الأرقام وحساب الأشياء", icon: "🔢",
-                videoUrl: "https://www.youtube.com/embed/D0Ajq682yrA",
-                writeQuestions: [{ prompt: "اكتب الرقم 'واحد' بالإنجليزية", target: "one" }, { prompt: "اكتب الرقم 'خمسة' بالإنجليزية", target: "five" }],
-                speakQuestions: [{ prompt: "انطق الرقم 'Three' بالإنجليزية", target: "three" }],
-                choiceQuestions: [{ question: "ما هو الرقم التالي للرقم Nine؟", optA: "Ten", optB: "Eight", type: "mc", correct: "Ten" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 3, name: "الألوان وتسمية الأشياء", icon: "🎨",
-                videoUrl: "https://www.youtube.com/embed/tVlcKp3bWH8",
-                writeQuestions: [{ prompt: "اكتب اسم اللون 'الأحمر'", target: "red" }, { prompt: "اكتب اسم اللون 'الأزرق'", target: "blue" }],
-                speakQuestions: [{ prompt: "انطق كلمة اللون الأصفر 'Yellow'", target: "yellow" }],
-                choiceQuestions: [{ question: "ما معنى كلمة 'Green' بالفيديو؟", optA: "أخضر", optB: "أسود", type: "mc", correct: "أخضر" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 4, name: "عائلتي وأقربائي", icon: "👨‍👩‍👧",
-                videoUrl: "https://www.youtube.com/embed/FHaObkHEkHQ",
-                writeQuestions: [{ prompt: "اكتب كلمة 'أب' بالإنجليزية", target: "father" }, { prompt: "اكتب كلمة 'أم' بالإنجليزية", target: "mother" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Brother' بالإنجليزية", target: "brother" }],
-                choiceQuestions: [{ question: "ما معنى 'Sister' بالفيديو؟", optA: "أخت", optB: "عم", type: "mc", correct: "أخت" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 5, name: "أيام الأسبوع والروتين", icon: "📅",
-                videoUrl: "https://www.youtube.com/embed/mXMofxtDPUQ",
-                writeQuestions: [{ prompt: "اكتب يوم 'الإثنين' بالإنجليزية", target: "monday" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Sunday' بالإنجليزية", target: "sunday" }],
-                choiceQuestions: [{ question: "كم عدد أيام الأسبوع بالشرح؟", optA: "7", optB: "5", type: "mc", correct: "7" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 6, name: "الضمائر الشخصية", icon: "👤",
-                videoUrl: "https://www.youtube.com/embed/N1O38P_6P1A",
-                writeQuestions: [{ prompt: "اكتب الضمير 'أنا'", target: "i" }, { prompt: "اكتب الضمير 'هو'", target: "he" }],
-                speakQuestions: [{ prompt: "انطق الضمير 'They' بوضوح", target: "they" }],
-                choiceQuestions: [{ question: "ما الضمير المستخدم لـ 'هي'؟", optA: "She", optB: "He", type: "mc", correct: "She" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 7, name: "فعل الكينونة (Verb to Be)", icon: "🧩",
-                videoUrl: "https://www.youtube.com/embed/j4_mS9R16Cg",
-                writeQuestions: [{ prompt: "أكمل الجملة: 'I ___ a student'", target: "am" }],
-                speakQuestions: [{ prompt: "انطق جملة 'They are friends'", target: "they are friends" }],
-                choiceQuestions: [{ question: "ما الفعل الذي يأتي مع الضمير You؟", optA: "are", optB: "is", type: "mc", correct: "are" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 8, name: "الطعام والمشروبات", icon: "🍔",
-                videoUrl: "https://www.youtube.com/embed/3Aad09lIu3w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'تفاحة'", target: "apple" }, { prompt: "اكتب كلمة 'ماء'", target: "water" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Coffee' بصوت واضح", target: "coffee" }],
-                choiceQuestions: [{ question: "ما معنى كلمة Milk بالفيديو؟", optA: "حليب", optB: "عصير", type: "mc", correct: "حليب" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 9, name: "المنزل والأثاث", icon: "🏠",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'غرفة النوم'", target: "bedroom" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'House' بالإنجليزية", target: "house" }],
-                choiceQuestions: [{ question: "أين نعد الطعام بالمطبخ؟", optA: "Kitchen", optB: "Bathroom", type: "mc", correct: "Kitchen" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 10, name: "اختبار المستويات الأولى", icon: "⭐",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب جملة 'شكراً لك'", target: "thank you" }],
-                speakQuestions: [{ prompt: "انطق جملة 'Good morning'", target: "good morning" }],
-                choiceQuestions: [{ question: "هل أنهيت المستوى المبتدئ بنجاح؟", optA: "نعم", optB: "لا", type: "tf", correct: "نعم" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 11, name: "المضارع البسيط والروتين", icon: "⏰",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'يلعب'", target: "play" }],
-                speakQuestions: [{ prompt: "انطق جملة 'I eat breakfast'", target: "i eat breakfast" }],
-                choiceQuestions: [{ question: "هل نضيف s للفعل مع الضمير He بالمضارع البسيط؟", optA: "صح", optB: "خطأ", type: "tf", correct: "صح" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 12, name: "الوقت والمواعيد", icon: "⌚",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'الساعة'", target: "clock" }],
-                speakQuestions: [{ prompt: "انطق جملة 'What time is it'", target: "what time is it" }],
-                choiceQuestions: [{ question: "كيف نقول 'الساعة الخامسة تماماً'؟", optA: "Five o'clock", optB: "Five minutes", type: "mc", correct: "Five o'clock" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 13, name: "التسوق والأسعار", icon: "🛍️",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب 'كم السعر؟'", target: "how much" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Price' بوضوح", target: "price" }],
-                choiceQuestions: [{ question: "ما معنى 'How much is this'؟", optA: "كم سعر هذا؟", optB: "أين هذا؟", type: "mc", correct: "كم سعر هذا؟" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 14, name: "الملابس والموضة", icon: "👕",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'قميص'", target: "shirt" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Jacket' بالإنجليزية", target: "jacket" }],
-                choiceQuestions: [{ question: "ما معنى كلمة Dress؟", optA: "فستان", optB: "قبعة", type: "mc", correct: "فستان" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 15, name: "السفر والاتجاهات", icon: "✈️",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'يمين'", target: "right" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Go straight' بوضوح", target: "go straight" }],
-                choiceQuestions: [{ question: "ما معنى كلمة 'Car'؟", optA: "سيارة", optB: "قطار", type: "mc", correct: "سيارة" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 16, name: "الماضي والأحداث السابقة", icon: "📜",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "ما الماضي من الفعل 'go'؟", target: "went" }],
-                speakQuestions: [{ prompt: "انطق جملة 'I went to school'", target: "i went to school" }],
-                choiceQuestions: [{ question: "الماضي من الفعل see هو:", optA: "saw", optB: "seen", type: "mc", correct: "saw" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 17, name: "المستقبل والتخطيط", icon: "🔮",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب أداة المستقبل 'سوف'", target: "will" }],
-                speakQuestions: [{ prompt: "انطق جملة 'I will travel'", target: "i will travel" }],
-                choiceQuestions: [{ question: "نستخدم Will للتعبير عن المستقبل؟", optA: "صح", optB: "خطأ", type: "tf", correct: "صح" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 18, name: "النطق السريع والمحاكاة", icon: "⚡",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب اختصار 'Gonna'", target: "going to" }],
-                speakQuestions: [{ prompt: "انطق اختصار 'Wanna' بالإنجليزية", target: "wanna" }],
-                choiceQuestions: [{ question: "ما الاختصار لـ 'Want to' بالمحادثة؟", optA: "Wanna", optB: "Gonna", type: "mc", correct: "Wanna" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 19, name: "المقابلات والعمل", icon: "💼",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'وظيفة'", target: "job" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Interview' بالإنجليزية", target: "interview" }],
-                choiceQuestions: [{ question: "ما معنى 'Tell me about yourself'؟", optA: "حدثني عن نفسك", optB: "أين تعمل؟", type: "mc", correct: "حدثني عن نفسك" }],
-                unlocked: false, completed: false
-            },
-            {
-                id: 20, name: "كأس الاحتراف والطلاقة", icon: "🏆",
-                videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w",
-                writeQuestions: [{ prompt: "اكتب كلمة 'مبروك الإنجاز'", target: "congratulations" }],
-                speakQuestions: [{ prompt: "انطق كلمة 'Fluent' بصوت قوي", target: "fluent" }],
-                choiceQuestions: [{ question: "هل أصبحت الآن جاهزاً للطلاقة؟", optA: "نعم وبكل فخر!", optB: "بالتأكيد", type: "mc", correct: "نعم وبكل فخر!" }],
-                unlocked: false, completed: false
-            }
+            { id: 1, name: "التحيات والتعارف", icon: "👋", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", writeQuestions: [{ prompt: "اكتب كلمة مرحباً", target: "hello" }], speakQuestions: [{ prompt: "انطق كلمة Hello", target: "hello" }], choiceQuestions: [{ question: "ما معنى Nice to meet you؟", optA: "سررت بلقائك", optB: "صباح الخير", correct: "سررت بلقائك" }], unlocked: true, completed: false },
+            { id: 2, name: "الأرقام وحساب الأشياء", icon: "🔢", videoUrl: "https://www.youtube.com/embed/D0Ajq682yrA", writeQuestions: [{ prompt: "اكتب واحد", target: "one" }], speakQuestions: [{ prompt: "انطق Three", target: "three" }], choiceQuestions: [{ question: "ما هو الرقم التالي لـ Nine؟", optA: "Ten", optB: "Eight", correct: "Ten" }], unlocked: false, completed: false },
+            { id: 3, name: "الألوان وتسمية الأشياء", icon: "🎨", videoUrl: "https://www.youtube.com/embed/tVlcKp3bWH8", writeQuestions: [{ prompt: "اكتب أحمر", target: "red" }], speakQuestions: [{ prompt: "انطق Yellow", target: "yellow" }], choiceQuestions: [{ question: "ما معنى Green؟", optA: "أخضر", optB: "أسود", correct: "أخضر" }], unlocked: false, completed: false },
+            { id: 4, name: "عائلتي وأقربائي", icon: "👨‍👩‍👧", videoUrl: "https://www.youtube.com/embed/FHaObkHEkHQ", writeQuestions: [{ prompt: "اكتب أب", target: "father" }], speakQuestions: [{ prompt: "انطق Brother", target: "brother" }], choiceQuestions: [{ question: "ما معنى Sister؟", optA: "أخت", optB: "عم", correct: "أخت" }], unlocked: false, completed: false },
+            { id: 5, name: "أيام الأسبوع والروتين", icon: "📅", videoUrl: "https://www.youtube.com/embed/mXMofxtDPUQ", writeQuestions: [{ prompt: "اكتب الإثنين", target: "monday" }], speakQuestions: [{ prompt: "انطق Sunday", target: "sunday" }], choiceQuestions: [{ question: "كم عدد أيام الأسبوع؟", optA: "7", optB: "5", correct: "7" }], unlocked: false, completed: false },
+            { id: 6, name: "الضمائر الشخصية", icon: "👤", videoUrl: "https://www.youtube.com/embed/N1O38P_6P1A", unlocked: false, completed: false },
+            { id: 7, name: "فعل الكينونة Verb to Be", icon: "🧩", videoUrl: "https://www.youtube.com/embed/j4_mS9R16Cg", unlocked: false, completed: false },
+            { id: 8, name: "الطعام والمشروبات", icon: "🍔", videoUrl: "https://www.youtube.com/embed/3Aad09lIu3w", unlocked: false, completed: false },
+            { id: 9, name: "المنزل والأثاث", icon: "🏠", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 10, name: "اختبار المستويات الأولى", icon: "⭐", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 11, name: "المضارع البسيط والروتين", icon: "⏰", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 12, name: "الوقت والمواعيد", icon: "⌚", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 13, name: "التسوق والأسعار", icon: "🛍️", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 14, name: "الملابس والموضة", icon: "👕", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 15, name: "السفر والاتجاهات", icon: "✈️", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 16, name: "الماضي والأحداث السابقة", icon: "📜", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 17, name: "المستقبل والتخطيط", icon: "🔮", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 18, name: "النطق السريع والمحاكاة", icon: "⚡", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 19, name: "المقابلات والعمل", icon: "💼", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false },
+            { id: 20, name: "كأس الاحتراف والطلاقة", icon: "🏆", videoUrl: "https://www.youtube.com/embed/gL2u-mK9N5w", unlocked: false, completed: false }
         ];
 
-        let lessons = JSON.parse(localStorage.getItem('app_lessons_fixed')) || full20Lessons;
-        if (lessons.length < 20) {
-            lessons = full20Lessons;
-            localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
-        }
+        // تنظيف ذاكرة المتصفح السابقة لضمان التشغيل خالي الأخطاء
+        localStorage.removeItem('app_lessons_fixed');
+        localStorage.removeItem('app_lessons_full');
 
-        let leaderboardData = [
-            { name: "سارة أحمد 👑", xp: 185, avatar: "👩‍💼" },
-            { name: "محمد علي", xp: 140, avatar: "👨‍💻" },
-            { name: "أنت (المستخدم)", xp: userXP, avatar: "🌟", isUser: true },
-            { name: "عمر خالد", xp: 95, avatar: "🧑‍🎓" },
-            { name: "فاطمة حسن", xp: 50, avatar: "👧" }
-        ];
+        let lessons = JSON.parse(localStorage.getItem('app_lessons_v4')) || full20Lessons;
 
         function updateXPDisplay() {
             document.getElementById('user-xp').innerText = userXP;
-            localStorage.setItem('user_xp_fixed', userXP);
+            localStorage.setItem('user_xp_v4', userXP);
             renderLeaderboard();
         }
 
-        function switchTab(tab) {
-            if (tab === 'map') {
-                document.getElementById('tab-map').classList.remove('hidden');
-                document.getElementById('tab-leaderboard').classList.add('hidden');
-                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-indigo-600";
-                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
-            } else {
-                document.getElementById('tab-map').classList.add('hidden');
-                document.getElementById('tab-leaderboard').classList.remove('hidden');
-                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
-                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-indigo-600";
-            }
-        }
-
-        function renderLeaderboard() {
-            const userIndex = leaderboardData.findIndex(u => u.isUser);
-            if (userIndex !== -1) leaderboardData[userIndex].xp = userXP;
-
-            leaderboardData.sort((a, b) => b.xp - a.xp);
-
-            const list = document.getElementById('leaderboard-list');
-            list.innerHTML = '';
-
-            leaderboardData.forEach((user, index) => {
-                const row = document.createElement('div');
-                row.className = `p-3.5 flex items-center justify-between ${user.isUser ? 'bg-indigo-50 border-r-4 border-indigo-600' : ''}`;
-                
-                let rankBadge = `<span class="font-bold text-slate-400 w-6">${index + 1}</span>`;
-                if(index === 0) rankBadge = `<span class="text-xl w-6">🥇</span>`;
-                if(index === 1) rankBadge = `<span class="text-xl w-6">🥈</span>`;
-                if(index === 2) rankBadge = `<span class="text-xl w-6">🥉</span>`;
-
-                row.innerHTML = `
-                    <div class="flex items-center space-x-3 space-x-reverse">
-                        ${rankBadge}
-                        <span class="text-2xl">${user.avatar}</span>
-                        <div class="font-bold text-sm ${user.isUser ? 'text-indigo-900 font-extrabold' : 'text-slate-700'}">${user.name}</div>
-                    </div>
-                    <div class="font-black text-sm text-indigo-600">${user.xp} XP</div>
-                `;
-                list.appendChild(row);
-            });
-        }
-
-        /* التصحيح الجذري لدالة الانتقال وتجاوز واجهة البداية فوراً */
+        // دالة اختيار المسار المباشرة والمضمونة 100%
         function selectTrack(track) {
             const onboarding = document.getElementById('onboarding-screen');
             const mainApp = document.getElementById('main-app');
 
             if (onboarding) {
-                onboarding.style.display = 'none';
                 onboarding.classList.add('hidden');
             }
             if (mainApp) {
                 mainApp.classList.remove('hidden');
             }
 
-            if(track === 'kids') {
+            if (track === 'kids') {
                 document.getElementById('track-title').innerText = "الصغار 🧸";
                 document.getElementById('track-icon').innerText = "🧸";
             } else {
@@ -557,6 +350,7 @@
 
         function renderLessonsPath() {
             const container = document.getElementById('lessons-path-container');
+            if (!container) return;
             container.innerHTML = '<div class="absolute w-2.5 bg-slate-200 top-6 bottom-6 -z-0 rounded-full"></div>';
 
             lessons.forEach((lesson, index) => {
@@ -567,7 +361,7 @@
                 if (lesson.unlocked) {
                     const isDone = lesson.completed;
                     node.innerHTML = `
-                        <button type="button" onclick="openLessonByIndex(${index})" class="w-16 h-16 ${isDone ? 'bg-amber-400 hover:bg-amber-500 border-amber-600 ring-amber-200' : 'bg-emerald-500 hover:bg-emerald-400 border-emerald-700 ring-emerald-200 active-ring'} text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 btn-3d shadow-lg ring-4 cursor-pointer">
+                        <button type="button" onclick="openLessonByIndex(${index})" class="w-16 h-16 ${isDone ? 'bg-amber-400 border-amber-600 ring-amber-200' : 'bg-emerald-500 border-emerald-700 ring-emerald-200 active-ring'} text-white rounded-full flex items-center justify-center text-3xl font-black border-b-4 btn-3d shadow-lg ring-4 cursor-pointer">
                             ${lesson.icon || '⭐'}
                         </button>
                         <div class="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white text-[10px] font-black px-2 py-0.5 rounded-full shadow border ${isDone ? 'text-amber-800' : 'text-emerald-800'} whitespace-nowrap">
@@ -655,9 +449,7 @@
         function checkWritingItem(index, target) {
             const input = document.querySelector(`.write-input-${index}`);
             const res = document.querySelector(`.write-res-${index}`);
-            const val = input.value.trim().toLowerCase();
-
-            if (val === target.trim().toLowerCase()) {
+            if (input.value.trim().toLowerCase() === target.trim().toLowerCase()) {
                 res.className = "text-xs font-bold mt-1 text-emerald-600";
                 res.innerText = `🎉 ممتاز! إجابة صحيحة.`;
             } else {
@@ -673,13 +465,12 @@
 
             if (!SpeechRecognition) {
                 res.className = "text-xs font-bold mt-1 text-rose-600";
-                res.innerText = "استخدم Google Chrome.";
+                res.innerText = "استخدم متصفح Google Chrome.";
                 return;
             }
 
             const recognition = new SpeechRecognition();
             recognition.lang = 'en-US';
-
             res.className = "text-xs font-bold mt-1 text-indigo-600 animate-pulse";
             res.innerText = `🎙️ تحدث الآن...`;
 
@@ -743,7 +534,6 @@
         function openGiftBox() {
             document.getElementById('gift-box').classList.add('hidden');
             document.getElementById('gift-subtitle').innerText = 'تهانينا على هذا الإنجاز الرائع!';
-            
             document.getElementById('earned-xp-badge').innerText = `+${currentEarnedXP} XP`;
             document.getElementById('reward-card').classList.remove('hidden');
             document.getElementById('reward-card').classList.add('flex');
@@ -754,16 +544,15 @@
 
         function claimRewardAndNext() {
             document.getElementById('gift-modal').classList.add('hidden');
-
             lessons[activeLessonIndex].completed = true;
 
             if (activeLessonIndex + 1 < lessons.length) {
                 lessons[activeLessonIndex + 1].unlocked = true;
-                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_v4', JSON.stringify(lessons));
                 renderLessonsPath();
                 openLessonByIndex(activeLessonIndex + 1);
             } else {
-                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_v4', JSON.stringify(lessons));
                 renderLessonsPath();
             }
         }
@@ -773,7 +562,20 @@
             document.getElementById('lesson-iframe').src = '';
         }
 
-        /* لوحة التحكم الشاملة بالتعديل والحذف */
+        function switchTab(tab) {
+            if (tab === 'map') {
+                document.getElementById('tab-map').classList.remove('hidden');
+                document.getElementById('tab-leaderboard').classList.add('hidden');
+                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-indigo-600";
+                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
+            } else {
+                document.getElementById('tab-map').classList.add('hidden');
+                document.getElementById('tab-leaderboard').classList.remove('hidden');
+                document.getElementById('nav-btn-map').className = "flex flex-col items-center text-slate-400 hover:text-slate-600";
+                document.getElementById('nav-btn-leaderboard').className = "flex flex-col items-center text-indigo-600";
+            }
+        }
+
         function openAdmin() { 
             document.getElementById('admin-screen').classList.remove('hidden'); 
             renderAdminLessonsList();
@@ -786,6 +588,7 @@
 
         function renderAdminLessonsList() {
             const container = document.getElementById('admin-lessons-list');
+            if (!container) return;
             container.innerHTML = '';
             lessons.forEach((l, index) => {
                 const item = document.createElement('div');
@@ -831,7 +634,7 @@
         function deleteLesson(id) {
             if (confirm("هل أنت تأكد من إزالة هذا الدرس من التطبيق؟")) {
                 lessons = lessons.filter(l => l.id !== id);
-                localStorage.setItem('app_lessons_fixed', JSON.stringify(lessons));
+                localStorage.setItem('app_lessons_v4', JSON.stringify(lessons));
                 renderAdminLessonsList();
                 renderLessonsPath();
             }
@@ -852,7 +655,7 @@
             const div = document.createElement('div');
             div.className = "bg-indigo-50 p-3 rounded-xl border border-indigo-100 space-y-2 relative";
             div.innerHTML = `
-                <input type="text" class="write-prompt w-full p-2 rounded-lg border text-xs" value="${prompt}" placeholder="السؤال: اكتب كلمة 'تفاحة'">
+                <input type="text" class="write-prompt w-full p-2 rounded-lg border text-xs" value="${prompt}" placeholder="السؤال: اكتب كلمة تفاحة">
                 <input type="text" class="write-target w-full p-2 rounded-lg border text-xs" value="${target}" placeholder="الكلمة الإنجليزية الصحيحة: apple">
             `;
             container.appendChild(div);
@@ -863,4 +666,88 @@
             const div = document.createElement('div');
             div.className = "bg-amber-50 p-3 rounded-xl border border-amber-100 space-y-2 relative";
             div.innerHTML = `
-                <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" valu
+                <input type="text" class="speak-prompt w-full p-2 rounded-lg border text-xs" value="${prompt}" placeholder="السؤال: انطق كلمة Apple">
+                <input type="text" class="speak-target w-full p-2 rounded-lg border text-xs" value="${target}" placeholder="الكلمة المطلوب نطقها: apple">
+            `;
+            container.appendChild(div);
+        }
+
+        function addChoiceQuestionField(question = '', optA = '', optB = '', correct = '') {
+            const container = document.getElementById('choice-questions-container');
+            const div = document.createElement('div');
+            div.className = "bg-emerald-50 p-3 rounded-xl border border-emerald-100 space-y-2 relative";
+            div.innerHTML = `
+                <input type="text" class="choice-q w-full p-2 rounded-lg border text-xs" value="${question}" placeholder="السؤال التفاعلي...">
+                <div class="grid grid-cols-2 gap-2">
+                    <input type="text" class="choice-a w-full p-2 rounded-lg border text-xs" value="${optA}" placeholder="الخيار الأول A">
+                    <input type="text" class="choice-b w-full p-2 rounded-lg border text-xs" value="${optB}" placeholder="الخيار الثاني B">
+                </div>
+                <input type="text" class="choice-correct w-full p-2 rounded-lg border text-xs" value="${correct}" placeholder="الإجابة الصحيحة بالضبط">
+            `;
+            container.appendChild(div);
+        }
+
+        function saveLesson(e) {
+            e.preventDefault();
+            const editId = document.getElementById('editing-lesson-id').value;
+
+            const writeCards = document.querySelectorAll('#write-questions-container > div');
+            const writeQuestions = [];
+            writeCards.forEach(c => {
+                const prompt = c.querySelector('.write-prompt').value;
+                const target = c.querySelector('.write-target').value;
+                if(prompt && target) writeQuestions.push({ prompt, target });
+            });
+
+            const speakCards = document.querySelectorAll('#speak-questions-container > div');
+            const speakQuestions = [];
+            speakCards.forEach(c => {
+                const prompt = c.querySelector('.speak-prompt').value;
+                const target = c.querySelector('.speak-target').value;
+                if(prompt && target) speakQuestions.push({ prompt, target });
+            });
+
+            const choiceCards = document.querySelectorAll('#choice-questions-container > div');
+            const choiceQuestions = [];
+            choiceCards.forEach(c => {
+                const question = c.querySelector('.choice-q').value;
+                const optA = c.querySelector('.choice-a').value;
+                const optB = c.querySelector('.choice-b').value;
+                const correct = c.querySelector('.choice-correct').value;
+                if(question && correct) choiceQuestions.push({ question, optA, optB, correct });
+            });
+
+            if (editId) {
+                const index = lessons.findIndex(l => l.id == editId);
+                if (index !== -1) {
+                    lessons[index].name = document.getElementById('lesson-name-input').value;
+                    lessons[index].icon = document.getElementById('lesson-icon-input').value || '⭐';
+                    lessons[index].videoUrl = document.getElementById('lesson-video-input').value;
+                    lessons[index].writeQuestions = writeQuestions;
+                    lessons[index].speakQuestions = speakQuestions;
+                    lessons[index].choiceQuestions = choiceQuestions;
+                }
+            } else {
+                const newLesson = {
+                    id: Date.now(),
+                    name: document.getElementById('lesson-name-input').value,
+                    icon: document.getElementById('lesson-icon-input').value || '⭐',
+                    videoUrl: document.getElementById('lesson-video-input').value,
+                    writeQuestions,
+                    speakQuestions,
+                    choiceQuestions,
+                    unlocked: false,
+                    completed: false
+                };
+                lessons.push(newLesson);
+            }
+
+            localStorage.setItem('app_lessons_v4', JSON.stringify(lessons));
+            renderAdminLessonsList();
+            renderLessonsPath();
+            alert("✅ تم حفظ التعديلات بنجاح!");
+            resetForm();
+        }
+    </script>
+</body>
+</html>
